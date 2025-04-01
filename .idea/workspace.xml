@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a34ff0ce-7744-41f9-a83e-ef9c348ef1da" name="Changes" comment="Readme aktualisiert, Klassendiagramm hinzugefügt, JavaFX IB, Schriftarten aktualisiert" />
+    <list default="true" id="a34ff0ce-7744-41f9-a83e-ef9c348ef1da" name="Changes" comment="Readme aktualisiert, Klassendiagramm hinzugefügt, JavaFX IB, Schriftarten aktualisiert">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -52,10 +54,10 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/sschw/laufender Unterricht/NHPlus/nhplus/doc",
+    "last_opened_file_path": "C:/Users/sschw/laufender Unterricht/NHPlus/nhplus",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -141,6 +143,7 @@
       <workItem from="1743519415913" duration="5538000" />
       <workItem from="1743525139214" duration="1223000" />
       <workItem from="1743526797009" duration="83000" />
+      <workItem from="1743526923857" duration="684000" />
     </task>
     <task id="LOCAL-00001" summary="Readme aktualisiert, Klassendiagramm hinzugefügt, JavaFX IB, Schriftarten aktualisiert">
       <option name="closed" value="true" />
@@ -150,7 +153,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743526210484</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Readme aktualisiert, Klassendiagramm hinzugefügt, JavaFX IB, Schriftarten aktualisiert">
+      <option name="closed" value="true" />
+      <created>1743527004876</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1743527004876</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
