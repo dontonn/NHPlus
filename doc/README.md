@@ -87,6 +87,6 @@ Für jede Klasse, die du neu implementierst, muss eine Javadoc erstellt werden. 
 den Zweck der Klasse sowie jeder Methode anzugeben. Auf diese Weise sollt ihr sicherstellen, dass ihr das Single Responsibility-Prinzip einhaltet
 sowie Klassen und Methoden mit hoher Kohäsion schreibt. Wenn ihr beim Dokumentieren entdeckt, dass das nicht gegeben ist, ändert es!
 
-### Bugs
+### Passwörter
 
-Notiert hier am Ende eures Projektes, welche Anforderungen nicht erfüllt worden sind bzw. Bugs beeinhalten.
+Gib hier nötige Benutzernamen und Passwörter an!
