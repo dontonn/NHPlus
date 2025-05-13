@@ -49,10 +49,11 @@ public class AllTreatmentController {
     @FXML
     private Button buttonDelete;
 
-    private final ObservableList<Treatment> treatments = FXCollections.observableArrayList();
     private TreatmentDao dao;
     private final ObservableList<String> patientSelection = FXCollections.observableArrayList();
+    private final ObservableList<Treatment> treatments = FXCollections.observableArrayList();
     private ArrayList<Patient> patientList;
+
 
     public void initialize() {
         readAllAndShowInTableView();
@@ -88,18 +89,25 @@ public class AllTreatmentController {
     }
 
     private void createComboBoxData() {
+        patientSelection.clear();
+        patientSelection.add("alle");
+
         PatientDao dao = DaoFactory.getDaoFactory().createPatientDAO();
         try {
             patientList = (ArrayList<Patient>) dao.readAll();
-            this.patientSelection.add("alle");
             for (Patient patient: patientList) {
-                this.patientSelection.add(patient.getSurname());
+                this.patientSelection.add(formatPatientDisplayName(patient));
             }
+            comboBoxPatientSelection.setItems(patientSelection);
+            comboBoxPatientSelection.getSelectionModel().selectFirst(); // "alle" wird vorausgewählt
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
     }
 
+    private String formatPatientDisplayName(Patient patient) {
+        return String.format("%s, %s", patient.getSurname(), patient.getFirstName());
+    }
 
     @FXML
     public void handleComboBox() {
@@ -107,22 +115,32 @@ public class AllTreatmentController {
         this.treatments.clear();
         this.dao = DaoFactory.getDaoFactory().createTreatmentDao();
 
-        if (selectedPatient.equals("alle")) {
+        if (selectedPatient == null || selectedPatient.equals("alle")) {
             try {
                 this.treatments.addAll(this.dao.readAll());
             } catch (SQLException exception) {
                 exception.printStackTrace();
             }
         }
-
-        Patient patient = searchInList(selectedPatient);
-        if (patient !=null) {
-            try {
-                this.treatments.addAll(this.dao.readTreatmentsByPid(patient.getPid()));
-            } catch (SQLException exception) {
-                exception.printStackTrace();
+        else {
+            Patient patient = getPatientFromDisplayName(selectedPatient);
+            if (patient != null) {
+                try {
+                    this.treatments.addAll(this.dao.readTreatmentsByPid(patient.getPid()));
+                } catch (SQLException exception) {
+                    exception.printStackTrace();
+                }
             }
         }
+    }
+
+    private Patient getPatientFromDisplayName(String displayName) {
+        for (Patient patient : patientList) {
+            if (displayName.equals(formatPatientDisplayName(patient))) {
+                return patient;
+            }
+        }
+        return null;
     }
 
     private Patient searchInList(String surname) {
