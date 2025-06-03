@@ -44,18 +44,18 @@ public class CareGiverDao extends DaoImp<CareGiver> {
     }
 
     /**
-     * Generates a <code>PreparedStatement</code> to query a careGiver by a given careGiver id (pid).
+     * Generates a <code>PreparedStatement</code> to query a careGiver by a given careGiver id (cid).
      *
-     * @param pid careGiver id to query.
+     * @param cid careGiver id to query.
      * @return <code>PreparedStatement</code> to query the careGiver.
      */
     @Override
-    protected PreparedStatement getReadByIDStatement(long pid) {
+    protected PreparedStatement getReadByIDStatement(long cid) {
         PreparedStatement preparedStatement = null;
         try {
             final String SQL = "SELECT * FROM care_giver WHERE cid = ?";
             preparedStatement = this.connection.prepareStatement(SQL);
-            preparedStatement.setLong(1, pid);
+            preparedStatement.setLong(1, cid);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -114,7 +114,7 @@ public class CareGiverDao extends DaoImp<CareGiver> {
 
     /**
      * Generates a <code>PreparedStatement</code> to update the given careGiver, identified
-     * by the id of the careGiver (pid).
+     * by the id of the careGiver (cid).
      *
      * @param careGiver careGiver object to update.
      * @return <code>PreparedStatement</code> to update the given careGiver.
@@ -143,16 +143,16 @@ public class CareGiverDao extends DaoImp<CareGiver> {
     /**
      * Generates a <code>PreparedStatement</code> to delete a careGiver with the given id.
      *
-     * @param pid Id of the careGiver to delete.
+     * @param cid Id of the careGiver to delete.
      * @return <code>PreparedStatement</code> to delete careGiver with the given id.
      */
     @Override
-    protected PreparedStatement getDeleteStatement(long pid) {
+    protected PreparedStatement getDeleteStatement(long cid) {
         PreparedStatement preparedStatement = null;
         try {
             final String SQL = "DELETE FROM care_giver WHERE cid = ?";
             preparedStatement = this.connection.prepareStatement(SQL);
-            preparedStatement.setLong(1, pid);
+            preparedStatement.setLong(1, cid);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

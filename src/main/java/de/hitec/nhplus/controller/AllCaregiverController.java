@@ -19,6 +19,10 @@ import javafx.scene.control.cell.TextFieldTableCell;
 
 import java.sql.SQLException;
 
+/**
+ * The <code>AllCareGiverController</code> contains the entire logic of the AllCaregiver view. It determines which data is displayed and how to react to events.
+ */
+
 public class AllCaregiverController {
     @FXML
     private TableView<CareGiver> tableView;
@@ -139,7 +143,12 @@ public class AllCaregiverController {
             }
         }
     }
-    
+
+    /**
+     * When a cell of the column with firstnames was changed, this method will be called, to persist the change.
+     *
+     * @param event Event including the changed object and the change.
+     */
     @FXML
     public void handleOnEditFirstname(TableColumn.CellEditEvent<CareGiver, String> event) {
         event.getRowValue().setFirstName(event.getNewValue());
@@ -158,7 +167,7 @@ public class AllCaregiverController {
     }
     
     /**
-     * When a cell of the column with room numbers was changed, this method will be called, to persist the change.
+     * When a cell of the column with telephone number was changed, this method will be called, to persist the change.
      *
      * @param event Event including the changed object and the change.
      */
@@ -180,7 +189,11 @@ public class AllCaregiverController {
             exception.printStackTrace();
         }
     }
-    
+
+    /**
+     * Reads and puts all CareGivers in the Table View
+     */
+
     private void readAllAndShowInTableView() {
         this.careGivers.clear();
         this.dao = DaoFactory.getDaoFactory().createCareGiverDAO();
@@ -191,6 +204,11 @@ public class AllCaregiverController {
         }
     }
 
+    /**
+     * Checks if the InputData is Valid and Present
+     *
+     * @return true, if the InputData is valid, else false.
+     */
     private boolean areInputDataValid() {
         return !this.textFieldFirstName.getText().isBlank() && !this.textFieldSurname.getText().isBlank() &&
                 !this.textFieldTelephoneNumber.getText().isBlank();

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * CareGivers treat Patiens in
+ * CareGivers care for Patients
  */
 public class CareGiver extends Person {
     private SimpleLongProperty cid;
@@ -63,10 +63,10 @@ public class CareGiver extends Person {
     }
 
     /**
-     * Adds a treatment to the list of treatments, if the list does not already contain the treatment.
+     * Adds a CareGiver to the list of treatments, if the list does not already contain the treatment.
      *
      * @param treatment Treatment to add.
-     * @return False, if the treatment was already part of the list, else true.
+     * @return False, if the Caregiver was already part of the list, else true.
      */
     public boolean add(Treatment treatment) {
         if (this.allTreatments.contains(treatment)) {
