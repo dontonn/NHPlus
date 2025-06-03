@@ -1,9 +1,12 @@
 package de.hitec.nhplus.controller;
 
 import de.hitec.nhplus.Main;
+import de.hitec.nhplus.datastorage.CareGiverDao;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.PatientDao;
 import de.hitec.nhplus.datastorage.TreatmentDao;
+import de.hitec.nhplus.model.Patient;
+import de.hitec.nhplus.model.CareGiver;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,7 +16,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.model.Treatment;
 
 import java.io.IOException;
@@ -53,6 +55,7 @@ public class AllTreatmentController {
     private final ObservableList<String> patientSelection = FXCollections.observableArrayList();
     private final ObservableList<Treatment> treatments = FXCollections.observableArrayList();
     private ArrayList<Patient> patientList;
+    private ArrayList<CareGiver> careGiverList;
 
 
     public void initialize() {
@@ -143,10 +146,19 @@ public class AllTreatmentController {
         return null;
     }
 
-    private Patient searchInList(String surname) {
+    private Patient searchPatientInList(String surname) {
         for (Patient patient : this.patientList) {
             if (patient.getSurname().equals(surname)) {
                 return patient;
+            }
+        }
+        return null;
+    }
+
+    private CareGiver searchCareGiverInList(String surname) {
+        for (CareGiver caregiver : this.careGiverList) {
+            if (caregiver.getSurname().equals(surname)) {
+                return caregiver;
             }
         }
         return null;
@@ -168,8 +180,9 @@ public class AllTreatmentController {
     public void handleNewTreatment() {
         try{
             String selectedPatient = this.comboBoxPatientSelection.getSelectionModel().getSelectedItem();
-            Patient patient = searchInList(selectedPatient);
-            newTreatmentWindow(patient);
+            Patient patient = searchPatientInList(selectedPatient);
+            CareGiver careGiver = searchCareGiverInList("");
+            newTreatmentWindow(patient, careGiver);
         } catch (NullPointerException exception){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information");
@@ -190,7 +203,7 @@ public class AllTreatmentController {
         });
     }
 
-    public void newTreatmentWindow(Patient patient) {
+    public void newTreatmentWindow(Patient patient, CareGiver careGiver) {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/de/hitec/nhplus/NewTreatmentView.fxml"));
             AnchorPane pane = loader.load();
@@ -200,7 +213,7 @@ public class AllTreatmentController {
             Stage stage = new Stage();
 
             NewTreatmentController controller = loader.getController();
-            controller.initialize(this, stage, patient);
+            controller.initialize(this, stage, patient, careGiver);
 
             stage.setScene(scene);
             stage.setResizable(false);
