@@ -32,4 +32,15 @@ public class MainWindowController {
             exception.printStackTrace();
         }
     }
+
+    @FXML
+    private void handleShowAllCareGivers(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("/de/hitec/nhplus/AllCaregiverView.fxml"));
+        try {
+            mainBorderPane.setCenter(loader.load());
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
 }
