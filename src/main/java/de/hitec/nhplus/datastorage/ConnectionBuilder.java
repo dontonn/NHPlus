@@ -5,7 +5,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import org.sqlite.SQLiteConfig;
-
+/**
+ *  Handles the Connection to the Database.
+ *  Open/Closes the Connection to the Database and is used to Configure the connection.
+ * */
 public class ConnectionBuilder {
 
     private static final String DB_NAME = "nursingHome.db";
@@ -13,6 +16,12 @@ public class ConnectionBuilder {
 
     private static Connection connection;
 
+
+    /**
+     * Handles Opening the Connection to the Database.
+     * Opens and Configures the Connection to the Database
+     * @return Returns the Connection.
+     * */
     synchronized public static Connection getConnection() {
         try {
             if (ConnectionBuilder.connection == null) {
@@ -27,6 +36,10 @@ public class ConnectionBuilder {
         return ConnectionBuilder.connection;
     }
 
+    /**
+     * Handles closing the connection to the Database.
+     * Trys to close the connection to the Database.
+     * */
     synchronized public static void closeConnection() {
         try {
             if (ConnectionBuilder.connection != null) {

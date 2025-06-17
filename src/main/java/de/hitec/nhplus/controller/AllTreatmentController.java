@@ -23,6 +23,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * The <code>AllTreatmentController</code> contains the entire logic of the AllTreatment view. It determines which data is displayed and how to react to events.
+ */
+
 public class AllTreatmentController {
 
     @FXML
@@ -64,6 +68,12 @@ public class AllTreatmentController {
     private ArrayList<Patient> patientList;
     private ArrayList<CareGiver> careGiverList;
 
+
+    /**
+     * When <code>initialize()</code> gets called, all fields are already initialized. For example from the FXMLLoader
+     * after loading an FXML-File. At this point of the lifecycle of the Controller, the fields can be accessed and
+     * configured.
+     */
 
     public void initialize() {
         readAllAndShowInTableView();
@@ -126,6 +136,9 @@ public class AllTreatmentController {
         return null;
     }
 
+    /**
+     *   Reads and Shows all Treatments in the Table
+     **/
     public void readAllAndShowInTableView() {
         this.treatments.clear();
         comboBoxPatientSelection.getSelectionModel().select(0);

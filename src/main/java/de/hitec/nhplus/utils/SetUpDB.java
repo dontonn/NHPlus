@@ -41,6 +41,7 @@ public class SetUpDB {
 
     /**
      * This method wipes the database by dropping the tables.
+     * @param connection The DB connection to use.
      */
     public static void wipeDb(Connection connection) {
         try (Statement statement = connection.createStatement()) {
@@ -51,7 +52,10 @@ public class SetUpDB {
             System.out.println(exception.getMessage());
         }
     }
-
+    /**
+     * Sets up the patien table
+     * @param connection The DB connection to use.
+     * */
     private static void setUpTablePatient(Connection connection) {
         final String SQL = "CREATE TABLE IF NOT EXISTS patient (" +
                 "   pid INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -67,7 +71,10 @@ public class SetUpDB {
             System.out.println(exception.getMessage());
         }
     }
-
+    /**
+     * Sets up the CareGiver table.
+     * @param connection The DB connection to use.
+     * */
     private static void setUpTableCareGiver(Connection connection) {
         final String SQL = "CREATE TABLE IF NOT EXISTS care_giver (" +
                 "   cid INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -82,6 +89,10 @@ public class SetUpDB {
         }
     }
 
+    /**
+     * Sets up the Treatment Table
+     * @param connection The DB connection to use.
+     * */
     private static void setUpTableTreatment(Connection connection) {
         final String SQL = "CREATE TABLE IF NOT EXISTS treatment (" +
                 "   tid INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -103,7 +114,9 @@ public class SetUpDB {
     }
 
 
-
+    /**
+     * Creats dummy data for the patiens table
+     * */
     private static void setUpPatients() {
         try {
             PatientDao dao = DaoFactory.getDaoFactory().createPatientDAO();
@@ -117,7 +130,9 @@ public class SetUpDB {
             exception.printStackTrace();
         }
     }
-
+    /**
+     * Creats dummy data for the CareGivers table
+     * */
     private static void setUpCareGivers() {
         try {
             CareGiverDao dao = DaoFactory.getDaoFactory().createCareGiverDAO();
@@ -129,7 +144,9 @@ public class SetUpDB {
             exception.printStackTrace();
         }
     }
-
+    /**
+     * Creats dummy data for the treatments table
+     * */
     private static void setUpTreatments() {
         try {
             TreatmentDao dao = DaoFactory.getDaoFactory().createTreatmentDao();
@@ -147,7 +164,9 @@ public class SetUpDB {
             exception.printStackTrace();
         }
     }
-
+    /**
+     * main methode to start db setup
+     * */
     public static void main(String[] args) {
         SetUpDB.setUpDb();
     }
