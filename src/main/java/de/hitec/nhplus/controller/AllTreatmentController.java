@@ -17,6 +17,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import de.hitec.nhplus.model.Treatment;
+import javafx.beans.property.SimpleStringProperty;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -45,6 +46,12 @@ public class AllTreatmentController {
     @FXML
     private TableColumn<Treatment, String> columnDescription;
 
+    /**
+     * Column showing the first name of the assigned caregiver.
+     */
+    @FXML
+    private TableColumn<Treatment, String> columnCaregiverFirstName;
+
     @FXML
     private ComboBox<String> comboBoxPatientSelection;
 
@@ -60,6 +67,7 @@ public class AllTreatmentController {
 
     public void initialize() {
         readAllAndShowInTableView();
+        loadCareGivers();
         comboBoxPatientSelection.setItems(patientSelection);
         comboBoxPatientSelection.getSelectionModel().select(0);
 
@@ -69,6 +77,15 @@ public class AllTreatmentController {
         this.columnBegin.setCellValueFactory(new PropertyValueFactory<>("begin"));
         this.columnEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
         this.columnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        // Set cell value for caregiver first name - FIXED
+        this.columnCaregiverFirstName.setCellValueFactory(cellData -> {
+            CareGiver careGiver = findCareGiverById(cellData.getValue().getCid());
+            return new SimpleStringProperty(
+                    careGiver != null ? careGiver.getFirstName() : ""
+            );
+        });
+
         this.tableView.setItems(this.treatments);
 
         // Disabling the button to delete treatments as long, as no treatment was selected.
@@ -78,6 +95,35 @@ public class AllTreatmentController {
                         AllTreatmentController.this.buttonDelete.setDisable(newTreatment == null));
 
         this.createComboBoxData();
+    }
+
+    /**
+     * Loads all caregivers from the database to be used for displaying caregiver names in the table.
+     */
+    private void loadCareGivers() {
+        try {
+            CareGiverDao dao = DaoFactory.getDaoFactory().createCareGiverDAO();
+            this.careGiverList = (ArrayList<CareGiver>) dao.readAll();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    /**
+     * Finds a caregiver by their ID from the loaded caregiver list.
+     *
+     * @param cid The caregiver ID to search for.
+     * @return The CareGiver object if found, null otherwise.
+     */
+    private CareGiver findCareGiverById(long cid) {
+        if (careGiverList != null) {
+            for (CareGiver cg : careGiverList) {
+                if (cg.getCid() == cid) {
+                    return cg;
+                }
+            }
+        }
+        return null;
     }
 
     public void readAllAndShowInTableView() {

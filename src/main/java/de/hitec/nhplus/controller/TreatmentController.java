@@ -1,5 +1,6 @@
 package de.hitec.nhplus.controller;
 
+import de.hitec.nhplus.datastorage.CareGiverDao;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.PatientDao;
 import de.hitec.nhplus.datastorage.TreatmentDao;
@@ -9,6 +10,7 @@ import javafx.stage.Stage;
 import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.model.Treatment;
 import de.hitec.nhplus.utils.DateConverter;
+import de.hitec.nhplus.model.CareGiver;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -35,6 +37,12 @@ public class TreatmentController {
 
     @FXML
     private DatePicker datePicker;
+
+    @FXML
+    private Label labelCaregiverName;
+
+    @FXML
+    private Label labelCaregiverPhone;
 
     private AllTreatmentController controller;
     private Stage stage;
@@ -63,6 +71,24 @@ public class TreatmentController {
         this.textFieldEnd.setText(this.treatment.getEnd());
         this.textFieldDescription.setText(this.treatment.getDescription());
         this.textAreaRemarks.setText(this.treatment.getRemarks());
+
+        // Load and display caregiver information
+        CareGiverDao cDao = DaoFactory.getDaoFactory().createCareGiverDAO();
+        CareGiver cg = null;
+        try {
+            cg = cDao.read((int) treatment.getCid());
+        } catch (SQLException e) {
+            cg = null;
+        }
+
+        if (cg != null) {
+            // Combined name display: "Firstname Lastname"
+            this.labelCaregiverName.setText(cg.getFirstName() + " " + cg.getSurname());
+            this.labelCaregiverPhone.setText(cg.getTelephoneNumber());
+        } else {
+            this.labelCaregiverName.setText("-");
+            this.labelCaregiverPhone.setText("-");
+        }
     }
 
     @FXML

@@ -86,14 +86,14 @@ public class SetUpDB {
         final String SQL = "CREATE TABLE IF NOT EXISTS treatment (" +
                 "   tid INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "   pid INTEGER NOT NULL, " +
-                "   cid INTEGER NOT NULL, " +
+                "   caregiver_id INTEGER, " +
                 "   treatment_date TEXT NOT NULL, " +
                 "   begin TEXT NOT NULL, " +
                 "   end TEXT NOT NULL, " +
                 "   description TEXT NOT NULL, " +
                 "   remark TEXT NOT NULL," +
                 "   FOREIGN KEY (pid) REFERENCES patient (pid) ON DELETE CASCADE, " +
-                "   FOREIGN KEY (cid) REFERENCES care_giver (cid) ON DELETE CASCADE " +
+                "   FOREIGN KEY (caregiver_id) REFERENCES care_giver (cid) ON DELETE CASCADE " +
                 ");";
         try (Statement statement = connection.createStatement()) {
             statement.execute(SQL);
