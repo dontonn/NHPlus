@@ -176,20 +176,32 @@ public class AllTreatmentController {
         }
     }
 
+    /**
+     * Handles the action to create a new Treatment.
+     * Validates that a patient is selected before opening the new Treatment dialog.
+     * Shows an alert in German if no patient is selected.
+     */
     @FXML
     public void handleNewTreatment() {
-        try{
-            String selectedPatient = this.comboBoxPatientSelection.getSelectionModel().getSelectedItem();
-            Patient patient = searchPatientInList(selectedPatient);
-            CareGiver careGiver = searchCareGiverInList("");
-            newTreatmentWindow(patient, careGiver);
-        } catch (NullPointerException exception){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information");
-            alert.setHeaderText("Patient für die Behandlung fehlt!");
-            alert.setContentText("Wählen Sie über die Combobox einen Patienten aus!");
-            alert.showAndWait();
+        String selectedDisplayName = comboBoxPatientSelection.getValue();
+        Patient patient = getPatientFromDisplayName(selectedDisplayName);
+        if (patient == null) {
+            showNoPatientAlert();
+            return;
         }
+        // Caregiver assignment will be managed in the new treatment dialog
+        newTreatmentWindow(patient, null);
+    }
+
+    /**
+     * Shows an information alert indicating that no patient has been selected.
+     */
+    private void showNoPatientAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText("Patient für die Behandlung fehlt!");
+        alert.setContentText("Wählen Sie über die Combobox einen Patienten aus!");
+        alert.showAndWait();
     }
 
     @FXML
