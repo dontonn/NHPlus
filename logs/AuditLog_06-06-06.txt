@@ -1,0 +1,5 @@
+[2025-06-06 09:45:15] User: admin (ID: 1) | Action: User created: ibrahim (Admin: false)
+[2025-06-06 09:48:22] User: admin (ID: 1) | Action: User deleted: ibrahim
+[2025-06-06 09:48:54] User: admin (ID: 1) | Action: User created: ibrahim (Admin: false)
+[2025-06-06 10:00:31] User: admin (ID: 1) | Action: User created: c (Admin: true)
+[2025-06-06 10:00:39] User: admin (ID: 1) | Action: User edited: ibrahim

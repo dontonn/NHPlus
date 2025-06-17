@@ -13,6 +13,9 @@ public class DaoFactory {
         }
         return DaoFactory.instance;
     }
+    public CaregiverDao createCaregiverDAO() {
+        return new CaregiverDao(ConnectionBuilder.getConnection());
+    }
 
     public TreatmentDao createTreatmentDao() {
         return new TreatmentDao(ConnectionBuilder.getConnection());

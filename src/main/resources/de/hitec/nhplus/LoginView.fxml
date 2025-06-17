@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.hitec.nhplus.controller.LoginController"
+      alignment="CENTER" spacing="20" prefWidth="400" prefHeight="300"
+      style="-fx-background-color: linear-gradient(to bottom, #2c3e50, #34495e); -fx-padding: 40;">
+
+    <!-- Header -->
+    <Label text="🏥 NHPlus" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;" />
+    <Label text="Pflegeheim-Verwaltungssystem" style="-fx-font-size: 14px; -fx-text-fill: #bdc3c7;" />
+
+    <!-- Login Form -->
+    <VBox spacing="15" alignment="CENTER" style="-fx-background-color: rgba(255, 255, 255, 0.95); -fx-background-radius: 10; -fx-padding: 30;">
+        <children>
+            <Label text="Anmeldung" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+            <!-- Status Message (Success/Error) - Initially Hidden -->
+            <Label fx:id="statusLabel" text=""
+                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10; -fx-background-radius: 5;"
+                   visible="false" />
+
+            <!-- Username Field -->
+            <VBox spacing="5">
+                <children>
+                    <Label text="Benutzername:" style="-fx-font-weight: bold; -fx-text-fill: #34495e;" />
+                    <TextField fx:id="usernameField" promptText="Benutzername eingeben..."
+                               style="-fx-pref-height: 35; -fx-font-size: 14px;"
+                               onKeyPressed="#handleEnterPressed" />
+                </children>
+            </VBox>
+
+            <!-- Password Field -->
+            <VBox spacing="5">
+                <children>
+                    <Label text="Passwort:" style="-fx-font-weight: bold; -fx-text-fill: #34495e;" />
+                    <PasswordField fx:id="passwordField" promptText="Passwort eingeben..."
+                                   style="-fx-pref-height: 35; -fx-font-size: 14px;"
+                                   onKeyPressed="#handleEnterPressed" />
+                </children>
+            </VBox>
+
+            <!-- Login Button -->
+            <Button fx:id="loginButton" text="🔑 Anmelden" onAction="#handleLogin"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-height: 40; -fx-pref-width: 200; -fx-background-radius: 5;" />
+
+            <!-- Info Text -->
+            <Label text="Passwort muss Zahl + Buchstabe + Sonderzeichen (+, -, .) enthalten"
+                   style="-fx-font-size: 10px; -fx-text-fill: #7f8c8d; -fx-text-alignment: center;"
+                   wrapText="true" maxWidth="250" />
+        </children>
+    </VBox>
+
+    <!-- Footer -->
+    <Label text="© 2024 NHPlus - Pflegeheim Curanum Schwachhausen"
+           style="-fx-font-size: 10px; -fx-text-fill: #95a5a6;" />
+</VBox>

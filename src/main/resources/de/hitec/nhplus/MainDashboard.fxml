@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="688.0" prefWidth="926.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.hitec.nhplus.controller.MainDashboardController">
+
+    <!-- TOP: Welcome Header -->
+    <top>
+        <HBox alignment="CENTER" style="-fx-background-color: #2c3e50; -fx-padding: 20;">
+            <children>
+                <Label fx:id="welcomeLabel" text="Willkommen im NHPlus System" textFill="white">
+                    <font>
+                        <Font name="System Bold" size="24.0" />
+                    </font>
+                </Label>
+            </children>
+        </HBox>
+    </top>
+
+    <!-- LEFT: Navigation Menu -->
+    <left>
+        <VBox alignment="CENTER" spacing="15.0" style="-fx-background-color: #34495e; -fx-padding: 20;"
+              minWidth="200.0" prefWidth="200.0">
+            <children>
+                <!-- Main Navigation Buttons -->
+                <Label text="Hauptmenü" textFill="white" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+
+                <Button fx:id="btnPatients" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+                        onAction="#handleShowPatients" prefWidth="160.0" prefHeight="40.0"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px;"
+                        text="👥 Patienten/innen">
+                    <VBox.margin>
+                        <Insets bottom="5.0" />
+                    </VBox.margin>
+                </Button>
+
+                <Button fx:id="btnTreatments" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+                        onAction="#handleShowTreatments" prefWidth="160.0" prefHeight="40.0"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 14px;"
+                        text="🏥 Behandlungen">
+                    <VBox.margin>
+                        <Insets bottom="15.0" />
+                    </VBox.margin>
+                </Button>
+
+                <!-- Spacer to push admin area to bottom -->
+                <Region VBox.vgrow="ALWAYS" />
+
+                <!-- Admin Area (only visible for admins) -->
+                <VBox fx:id="adminArea" spacing="10.0" visible="false">
+                    <children>
+                        <Separator />
+                        <Label text="Administration" textFill="#f39c12" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+
+                        <Button fx:id="btnAdminPanel" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+                                onAction="#handleShowAdminPanel" prefWidth="160.0" prefHeight="35.0"
+                                style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 12px;"
+                                text="⚙️ Verwaltung">
+                        </Button>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="15.0" />
+                    </VBox.margin>
+                </VBox>
+
+                <!-- Logout Button -->
+                <Button fx:id="btnLogout" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+                        onAction="#handleLogout" prefWidth="160.0" prefHeight="35.0"
+                        style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 12px;"
+                        text="🚪 Abmelden">
+                </Button>
+            </children>
+        </VBox>
+    </left>
+
+    <!-- CENTER: Content Area -->
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;">
+            <children>
+                <!-- Default Welcome Content -->
+                <VBox alignment="CENTER" spacing="20.0">
+                    <children>
+                        <Label text="🏥 NHPlus Pflegeheim-Verwaltung" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+                        <Label text="Wählen Sie einen Bereich aus dem Menü links:" style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;" />
+
+                        <HBox alignment="CENTER" spacing="30.0" style="-fx-padding: 20;">
+                            <children>
+                                <VBox alignment="CENTER" spacing="10.0" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 10;">
+                                    <children>
+                                        <Label text="👥" style="-fx-font-size: 40px;" />
+                                        <Label text="Patienten verwalten" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+                                    </children>
+                                </VBox>
+
+                                <VBox alignment="CENTER" spacing="10.0" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 10;">
+                                    <children>
+                                        <Label text="🏥" style="-fx-font-size: 40px;" />
+                                        <Label text="Behandlungen dokumentieren" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <Label fx:id="userInfoLabel" text="Angemeldet als: Benutzer" style="-fx-font-size: 12px; -fx-text-fill: #95a5a6;" />
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>

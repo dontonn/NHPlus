@@ -4,8 +4,10 @@ import de.hitec.nhplus.datastorage.ConnectionBuilder;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.PatientDao;
 import de.hitec.nhplus.datastorage.TreatmentDao;
+import de.hitec.nhplus.datastorage.CaregiverDao;
 import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.model.Treatment;
+import de.hitec.nhplus.model.Caregiver;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,10 +17,7 @@ import static de.hitec.nhplus.utils.DateConverter.convertStringToLocalDate;
 import static de.hitec.nhplus.utils.DateConverter.convertStringToLocalTime;
 
 /**
- * Call static class provides to static methods to set up and wipe the database. It uses the class ConnectionBuilder
- * and its path to build up the connection to the database. The class is executable. Executing the class will build
- * up a connection to the database and calls setUpDb() to wipe the database, build up a clean database and fill the
- * database with some test data.
+ * Extended SetUpDB - minimal changes to add Caregiver support
  */
 public class SetUpDB {
 
@@ -31,8 +30,10 @@ public class SetUpDB {
         SetUpDB.wipeDb(connection);
         SetUpDB.setUpTablePatient(connection);
         SetUpDB.setUpTableTreatment(connection);
+        SetUpDB.setUpTableCaregiver(connection);  // NEW: Add caregiver table
         SetUpDB.setUpPatients();
         SetUpDB.setUpTreatments();
+        SetUpDB.setUpCaregivers();  // NEW: Add caregiver data
     }
 
     /**
@@ -40,8 +41,9 @@ public class SetUpDB {
      */
     public static void wipeDb(Connection connection) {
         try (Statement statement = connection.createStatement()) {
-            statement.execute("DROP TABLE patient");
-            statement.execute("DROP TABLE treatment");
+            statement.execute("DROP TABLE IF EXISTS patient");
+            statement.execute("DROP TABLE IF EXISTS treatment");
+            statement.execute("DROP TABLE IF EXISTS caregiver");  // NEW
         } catch (SQLException exception) {
             System.out.println(exception.getMessage());
         }
@@ -55,7 +57,7 @@ public class SetUpDB {
                 "   dateOfBirth TEXT NOT NULL, " +
                 "   carelevel TEXT NOT NULL, " +
                 "   roomnumber TEXT NOT NULL, " +
-                "   assets TEXt NOT NULL" +
+                "   assets TEXT NOT NULL" +
                 ");";
         try (Statement statement = connection.createStatement()) {
             statement.execute(SQL);
@@ -83,6 +85,28 @@ public class SetUpDB {
         }
     }
 
+    /**
+     * NEW: Create caregiver table
+     */
+    private static void setUpTableCaregiver(Connection connection) {
+        final String SQL = "CREATE TABLE IF NOT EXISTS caregiver (" +
+                "   pid INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "   username TEXT NOT NULL UNIQUE, " +
+                "   firstname TEXT NOT NULL, " +
+                "   surname TEXT NOT NULL, " +
+                "   dateOfBirth TEXT NOT NULL, " +
+                "   telephoneNumber TEXT NOT NULL, " +
+                "   isAdmin BOOLEAN NOT NULL DEFAULT 0, " +
+                "   password_hash TEXT NOT NULL, " +
+                "   locked BOOLEAN DEFAULT 0, " +
+                "   lockedDate TEXT" +
+                ");";
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(SQL);
+        } catch (SQLException exception) {
+            System.out.println(exception.getMessage());
+        }
+    }
 
     private static void setUpPatients() {
         try {
@@ -116,7 +140,35 @@ public class SetUpDB {
         }
     }
 
+    /**
+     * NEW: Create test caregivers for login system
+     */
+    private static void setUpCaregivers() {
+        try {
+            CaregiverDao dao = DaoFactory.getDaoFactory().createCaregiverDAO();
+
+            // Admin User (password: Admin123+)
+            dao.create(new Caregiver("admin", "Admin", "Administrator",
+                    convertStringToLocalDate("1990-01-01"), "0123-456-789", "Admin123+", true, false, null));
+
+            // Regular User (password: User123-)
+            dao.create(new Caregiver("user", "Test", "User",
+                    convertStringToLocalDate("1985-05-15"), "0987-654-321", "User123-", false, false, null));
+
+            System.out.println("✅ Caregiver test data created!");
+            System.out.println("📋 Login credentials:");
+            System.out.println("   🔑 Admin: admin / Admin123+");
+            System.out.println("   👤 User: user / User123-");
+
+        } catch (SQLException exception) {
+            System.err.println("❌ Error creating caregivers:");
+            exception.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
+        System.out.println("🚀 Setting up NHPlus database...");
         SetUpDB.setUpDb();
+        System.out.println("✅ Database setup complete!");
     }
 }
