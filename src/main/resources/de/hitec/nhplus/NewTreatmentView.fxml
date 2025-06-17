@@ -66,6 +66,12 @@
             <DatePicker fx:id="datePicker" prefWidth="192.0" promptText="yyyy-mm-dd" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label fx:id="labelFirstName" text="Vorname" GridPane.columnIndex="1" />
             <Label fx:id="labelSurname" text="Nachname" GridPane.columnIndex="3" />
+            <Label text="Pfleger:" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="comboBoxCaregiver" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="192.0" promptText="Pflegekraft auswählen"/>
          </children>
       </GridPane>
       <HBox layoutX="298.0" layoutY="237.0" spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="50.0">

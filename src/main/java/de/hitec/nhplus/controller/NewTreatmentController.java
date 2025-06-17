@@ -16,7 +16,13 @@ import javafx.util.StringConverter;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import de.hitec.nhplus.datastorage.CareGiverDao;
 
+/**
+ * Controller class for creating and editing treatments.
+ */
 public class NewTreatmentController {
 
     @FXML
@@ -40,6 +46,12 @@ public class NewTreatmentController {
     @FXML
     private DatePicker datePicker;
 
+    /**
+     * ComboBox for selecting a caregiver for the treatment.
+     */
+    @FXML
+    private ComboBox<CareGiver> comboBoxCaregiver;
+
     @FXML
     private Button buttonAdd;
 
@@ -48,6 +60,9 @@ public class NewTreatmentController {
     private CareGiver careGiver;
     private Stage stage;
 
+    /**
+     * Initializes the controller.
+     */
     public void initialize(AllTreatmentController controller, Stage stage, Patient patient, CareGiver careGiver) {
         this.controller= controller;
         this.patient = patient;
@@ -74,6 +89,7 @@ public class NewTreatmentController {
             }
         });
         this.showPatientData();
+        this.createComboboxData();
     }
 
     private void showPatientData(){
@@ -122,5 +138,30 @@ public class NewTreatmentController {
             return true;
         }
         return this.textFieldDescription.getText().isBlank() || this.datePicker.getValue() == null;
+    }
+
+    /**
+     * Populates the ComboBox with all available caregivers and sets the selected caregiver.
+     */
+    private void createComboboxData() {
+        try {
+            CareGiverDao dao = DaoFactory.getDaoFactory().createCareGiverDAO();
+            ObservableList<CareGiver> caregivers = FXCollections.observableArrayList(dao.readAll());
+            comboBoxCaregiver.setItems(caregivers);
+            comboBoxCaregiver.setConverter(new StringConverter<CareGiver>() {
+                @Override
+                public String toString(CareGiver cg) {
+                    return (cg == null) ? "" : cg.getFirstName() + " " + cg.getSurname();
+                }
+                @Override
+                public CareGiver fromString(String string) {
+                    return null;
+                }
+            });
+            comboBoxCaregiver.getSelectionModel().selectedItemProperty().addListener(
+                    (obs, old, selected) -> this.careGiver = selected);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -17,14 +17,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import de.hitec.nhplus.model.Treatment;
+import javafx.beans.property.SimpleStringProperty;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-/**
- * The <code>AllTreatmentController</code> contains the entire logic of the AllTreatment view. It determines which data is displayed and how to react to events.
- */
 
 public class AllTreatmentController {
 
@@ -49,6 +46,12 @@ public class AllTreatmentController {
     @FXML
     private TableColumn<Treatment, String> columnDescription;
 
+    /**
+     * Column showing the first name of the assigned caregiver.
+     */
+    @FXML
+    private TableColumn<Treatment, String> columnCaregiverFirstName;
+
     @FXML
     private ComboBox<String> comboBoxPatientSelection;
 
@@ -61,15 +64,13 @@ public class AllTreatmentController {
     private ArrayList<Patient> patientList;
     private ArrayList<CareGiver> careGiverList;
 
+    // Flag to prevent duplicate loading during ComboBox updates
+    private boolean isUpdatingComboBox = false;
 
-    /**
-     * When <code>initialize()</code> gets called, all fields are already initialized. For example from the FXMLLoader
-     * after loading an FXML-File. At this point of the lifecycle of the Controller, the fields can be accessed and
-     * configured.
-     */
 
     public void initialize() {
         readAllAndShowInTableView();
+        loadCareGivers();
         comboBoxPatientSelection.setItems(patientSelection);
         comboBoxPatientSelection.getSelectionModel().select(0);
 
@@ -79,6 +80,15 @@ public class AllTreatmentController {
         this.columnBegin.setCellValueFactory(new PropertyValueFactory<>("begin"));
         this.columnEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
         this.columnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        // Set cell value for caregiver first name - FIXED
+        this.columnCaregiverFirstName.setCellValueFactory(cellData -> {
+            CareGiver careGiver = findCareGiverById(cellData.getValue().getCid());
+            return new SimpleStringProperty(
+                    careGiver != null ? careGiver.getFirstName() : ""
+            );
+        });
+
         this.tableView.setItems(this.treatments);
 
         // Disabling the button to delete treatments as long, as no treatment was selected.
@@ -89,12 +99,48 @@ public class AllTreatmentController {
 
         this.createComboBoxData();
     }
+
     /**
-    *   Reads and Shows all Treatments in the Table
-     **/
+     * Loads all caregivers from the database to be used for displaying caregiver names in the table.
+     */
+    private void loadCareGivers() {
+        try {
+            CareGiverDao dao = DaoFactory.getDaoFactory().createCareGiverDAO();
+            this.careGiverList = (ArrayList<CareGiver>) dao.readAll();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    /**
+     * Finds a caregiver by their ID from the loaded caregiver list.
+     *
+     * @param cid The caregiver ID to search for.
+     * @return The CareGiver object if found, null otherwise.
+     */
+    private CareGiver findCareGiverById(long cid) {
+        if (careGiverList != null) {
+            for (CareGiver cg : careGiverList) {
+                if (cg.getCid() == cid) {
+                    return cg;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Reads all treatments and shows them in the table view.
+     * This method prevents duplicate loading by temporarily disabling ComboBox events.
+     */
     public void readAllAndShowInTableView() {
         this.treatments.clear();
+
+        // Prevent ComboBox event from triggering during update
+        this.isUpdatingComboBox = true;
         comboBoxPatientSelection.getSelectionModel().select(0);
+        this.isUpdatingComboBox = false;
+
         this.dao = DaoFactory.getDaoFactory().createTreatmentDao();
         try {
             this.treatments.addAll(dao.readAll());
@@ -124,8 +170,17 @@ public class AllTreatmentController {
         return String.format("%s, %s", patient.getSurname(), patient.getFirstName());
     }
 
+    /**
+     * Handles ComboBox selection changes.
+     * Now includes check to prevent duplicate loading during programmatic updates.
+     */
     @FXML
     public void handleComboBox() {
+        // Skip if we're updating the ComboBox programmatically
+        if (isUpdatingComboBox) {
+            return;
+        }
+
         String selectedPatient = this.comboBoxPatientSelection.getSelectionModel().getSelectedItem();
         this.treatments.clear();
         this.dao = DaoFactory.getDaoFactory().createTreatmentDao();
