@@ -61,8 +61,8 @@ public class AllTreatmentController {
     private TreatmentDao dao;
     private final ObservableList<String> patientSelection = FXCollections.observableArrayList();
     private final ObservableList<Treatment> treatments = FXCollections.observableArrayList();
-    private ArrayList<Patient> patientList;
-    private ArrayList<CareGiver> careGiverList;
+    private ArrayList<Patient> patientList = new ArrayList<>();
+    private ArrayList<CareGiver> careGiverList = new ArrayList<>();
 
     // Flag to prevent duplicate loading during ComboBox updates
     private boolean isUpdatingComboBox = false;
@@ -113,6 +113,8 @@ public class AllTreatmentController {
             this.careGiverList = (ArrayList<CareGiver>) dao.readAll();
         } catch (SQLException exception) {
             exception.printStackTrace();
+            // Initialize as empty list if loading fails
+            this.careGiverList = new ArrayList<>();
         }
     }
 
@@ -141,9 +143,12 @@ public class AllTreatmentController {
         this.treatments.clear();
 
         // Prevent ComboBox event from triggering during update
-        this.isUpdatingComboBox = true;
-        comboBoxPatientSelection.getSelectionModel().select(0);
-        this.isUpdatingComboBox = false;
+        try {
+            this.isUpdatingComboBox = true;
+            comboBoxPatientSelection.getSelectionModel().select(0);
+        } finally {
+            this.isUpdatingComboBox = false;
+        }
 
         this.dao = DaoFactory.getDaoFactory().createTreatmentDao();
         try {
@@ -171,6 +176,8 @@ public class AllTreatmentController {
             comboBoxPatientSelection.getSelectionModel().selectFirst(); // "alle" wird vorausgewählt
         } catch (SQLException exception) {
             exception.printStackTrace();
+            // Initialize as empty list if loading fails
+            this.patientList = new ArrayList<>();
         }
     }
 
@@ -225,6 +232,10 @@ public class AllTreatmentController {
      * @return the matching Patient, or null if not found
      */
     private Patient getPatientFromDisplayName(String displayName) {
+        if (patientList == null || patientList.isEmpty()) {
+            return null;
+        }
+
         for (Patient patient : patientList) {
             if (displayName.equals(formatPatientDisplayName(patient))) {
                 return patient;
@@ -240,6 +251,10 @@ public class AllTreatmentController {
      * @return the matching Patient, or null if none matches
      */
     private Patient searchPatientInList(String surname) {
+        if (this.patientList == null || this.patientList.isEmpty()) {
+            return null;
+        }
+
         for (Patient patient : this.patientList) {
             if (patient.getSurname().equals(surname)) {
                 return patient;
@@ -255,6 +270,10 @@ public class AllTreatmentController {
      * @return the matching CareGiver, or null if none matches
      */
     private CareGiver searchCareGiverInList(String surname) {
+        if (this.careGiverList == null || this.careGiverList.isEmpty()) {
+            return null;
+        }
+
         for (CareGiver caregiver : this.careGiverList) {
             if (caregiver.getSurname().equals(surname)) {
                 return caregiver;

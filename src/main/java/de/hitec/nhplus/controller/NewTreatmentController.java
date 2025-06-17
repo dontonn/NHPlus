@@ -91,6 +91,11 @@ public class NewTreatmentController {
         });
         this.showPatientData();
         this.createComboboxData();
+
+        // Add listener for ComboBox selection changes
+        this.comboBoxCaregiver.valueProperty().addListener((obs, oldVal, newVal) -> {
+            this.buttonAdd.setDisable(this.areInputDataInvalid());
+        });
     }
 
     /**
@@ -107,6 +112,16 @@ public class NewTreatmentController {
      */
     @FXML
     public void handleAdd(){
+        // Check if caregiver is selected
+        if (careGiver == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warnung");
+            alert.setHeaderText("Kein Pfleger ausgewählt");
+            alert.setContentText("Bitte wählen Sie einen Pfleger aus!");
+            alert.showAndWait();
+            return;
+        }
+
         LocalDate date = this.datePicker.getValue();
         LocalTime begin = DateConverter.convertStringToLocalTime(textFieldBegin.getText());
         LocalTime end = DateConverter.convertStringToLocalTime(textFieldEnd.getText());
@@ -141,7 +156,7 @@ public class NewTreatmentController {
     }
 
     /**
-     * Validates input fields: checks non-null times, proper time order, non-blank description, and date selection.
+     * Validates input fields: checks non-null times, proper time order, non-blank description, date selection, and caregiver selection.
      *
      * @return true if any input is invalid, false otherwise
      */
@@ -158,7 +173,9 @@ public class NewTreatmentController {
         } catch (Exception exception) {
             return true;
         }
-        return this.textFieldDescription.getText().isBlank() || this.datePicker.getValue() == null;
+        return this.textFieldDescription.getText().isBlank() ||
+                this.datePicker.getValue() == null ||
+                this.comboBoxCaregiver.getValue() == null; // Check if caregiver is selected
     }
 
     /**
