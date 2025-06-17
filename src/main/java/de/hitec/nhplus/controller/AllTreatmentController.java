@@ -23,10 +23,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-/**
- * The <code>AllTreatmentController</code> contains the entire logic of the AllTreatment view. It determines which data is displayed and how to react to events.
- */
-
 public class AllTreatmentController {
 
     @FXML
@@ -68,12 +64,9 @@ public class AllTreatmentController {
     private ArrayList<Patient> patientList;
     private ArrayList<CareGiver> careGiverList;
 
+    // Flag to prevent duplicate loading during ComboBox updates
+    private boolean isUpdatingComboBox = false;
 
-    /**
-     * When <code>initialize()</code> gets called, all fields are already initialized. For example from the FXMLLoader
-     * after loading an FXML-File. At this point of the lifecycle of the Controller, the fields can be accessed and
-     * configured.
-     */
 
     public void initialize() {
         readAllAndShowInTableView();
@@ -137,11 +130,17 @@ public class AllTreatmentController {
     }
 
     /**
-     *   Reads and Shows all Treatments in the Table
-     **/
+     * Reads all treatments and shows them in the table view.
+     * This method prevents duplicate loading by temporarily disabling ComboBox events.
+     */
     public void readAllAndShowInTableView() {
         this.treatments.clear();
+
+        // Prevent ComboBox event from triggering during update
+        this.isUpdatingComboBox = true;
         comboBoxPatientSelection.getSelectionModel().select(0);
+        this.isUpdatingComboBox = false;
+
         this.dao = DaoFactory.getDaoFactory().createTreatmentDao();
         try {
             this.treatments.addAll(dao.readAll());
@@ -171,8 +170,17 @@ public class AllTreatmentController {
         return String.format("%s, %s", patient.getSurname(), patient.getFirstName());
     }
 
+    /**
+     * Handles ComboBox selection changes.
+     * Now includes check to prevent duplicate loading during programmatic updates.
+     */
     @FXML
     public void handleComboBox() {
+        // Skip if we're updating the ComboBox programmatically
+        if (isUpdatingComboBox) {
+            return;
+        }
+
         String selectedPatient = this.comboBoxPatientSelection.getSelectionModel().getSelectedItem();
         this.treatments.clear();
         this.dao = DaoFactory.getDaoFactory().createTreatmentDao();
