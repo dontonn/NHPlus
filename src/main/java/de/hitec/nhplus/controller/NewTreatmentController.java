@@ -61,7 +61,8 @@ public class NewTreatmentController {
     private Stage stage;
 
     /**
-     * Initializes the controller.
+     * Initializes the controller: sets references to parent controller, stage, patient, and caregiver;
+     * configures input validation listeners, date picker converter, and loads patient data and combo box.
      */
     public void initialize(AllTreatmentController controller, Stage stage, Patient patient, CareGiver careGiver) {
         this.controller= controller;
@@ -92,11 +93,18 @@ public class NewTreatmentController {
         this.createComboboxData();
     }
 
+    /**
+     * Displays the patient's first name and surname in the corresponding labels.
+     */
     private void showPatientData(){
         this.labelFirstName.setText(patient.getFirstName());
         this.labelSurname.setText(patient.getSurname());
     }
 
+    /**
+     * Creates a new Treatment from input fields, saves it to the database,
+     * refreshes the parent table view, and closes the window.
+     */
     @FXML
     public void handleAdd(){
         LocalDate date = this.datePicker.getValue();
@@ -110,6 +118,11 @@ public class NewTreatmentController {
         stage.close();
     }
 
+    /**
+     * Persists the given Treatment object to the database using TreatmentDao.
+     *
+     * @param treatment the Treatment to save
+     */
     private void createTreatment(Treatment treatment) {
         TreatmentDao dao = DaoFactory.getDaoFactory().createTreatmentDao();
         try {
@@ -119,11 +132,19 @@ public class NewTreatmentController {
         }
     }
 
+    /**
+     * Cancels the treatment creation and closes the dialog without saving.
+     */
     @FXML
     public void handleCancel(){
         stage.close();
     }
 
+    /**
+     * Validates input fields: checks non-null times, proper time order, non-blank description, and date selection.
+     *
+     * @return true if any input is invalid, false otherwise
+     */
     private boolean areInputDataInvalid() {
         if (this.textFieldBegin.getText() == null || this.textFieldEnd.getText() == null) {
             return true;
