@@ -68,6 +68,10 @@ public class AllTreatmentController {
     private boolean isUpdatingComboBox = false;
 
 
+    /**
+     * Initializes the controller: loads all treatments and caregivers,
+     * configures table columns, combo box data, and selection listeners.
+     */
     public void initialize() {
         readAllAndShowInTableView();
         loadCareGivers();
@@ -149,6 +153,10 @@ public class AllTreatmentController {
         }
     }
 
+    /**
+     * Populates the patient selection combo box with all patients from the database,
+     * prefixed by an option for showing all treatments.
+     */
     private void createComboBoxData() {
         patientSelection.clear();
         patientSelection.add("alle");
@@ -166,6 +174,12 @@ public class AllTreatmentController {
         }
     }
 
+    /**
+     * Formats a patient's display name as "surname, firstName" for the combo box.
+     *
+     * @param patient the Patient to format
+     * @return the formatted display name
+     */
     private String formatPatientDisplayName(Patient patient) {
         return String.format("%s, %s", patient.getSurname(), patient.getFirstName());
     }
@@ -204,6 +218,12 @@ public class AllTreatmentController {
         }
     }
 
+    /**
+     * Retrieves a Patient object corresponding to the given display name.
+     *
+     * @param displayName the formatted patient name from the combo box
+     * @return the matching Patient, or null if not found
+     */
     private Patient getPatientFromDisplayName(String displayName) {
         for (Patient patient : patientList) {
             if (displayName.equals(formatPatientDisplayName(patient))) {
@@ -213,6 +233,12 @@ public class AllTreatmentController {
         return null;
     }
 
+    /**
+     * Searches the loaded patient list for a patient by surname.
+     *
+     * @param surname the surname to search for
+     * @return the matching Patient, or null if none matches
+     */
     private Patient searchPatientInList(String surname) {
         for (Patient patient : this.patientList) {
             if (patient.getSurname().equals(surname)) {
@@ -222,6 +248,12 @@ public class AllTreatmentController {
         return null;
     }
 
+    /**
+     * Searches the loaded caregiver list for a caregiver by surname.
+     *
+     * @param surname the surname to search for
+     * @return the matching CareGiver, or null if none matches
+     */
     private CareGiver searchCareGiverInList(String surname) {
         for (CareGiver caregiver : this.careGiverList) {
             if (caregiver.getSurname().equals(surname)) {
@@ -231,6 +263,9 @@ public class AllTreatmentController {
         return null;
     }
 
+    /**
+     * Deletes the selected treatment both from the table view and the database.
+     */
     @FXML
     public void handleDelete() {
         int index = this.tableView.getSelectionModel().getSelectedIndex();
@@ -271,6 +306,9 @@ public class AllTreatmentController {
         alert.showAndWait();
     }
 
+    /**
+     * Sets up a double-click listener on the table view to open the treatment details window.
+     */
     @FXML
     public void handleMouseClick() {
         tableView.setOnMouseClicked(event -> {
@@ -282,6 +320,12 @@ public class AllTreatmentController {
         });
     }
 
+    /**
+     * Opens the New Treatment dialog for the specified patient and optional caregiver.
+     *
+     * @param patient the Patient for whom to create a treatment
+     * @param careGiver the CareGiver to preselect, or null
+     */
     public void newTreatmentWindow(Patient patient, CareGiver careGiver) {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/de/hitec/nhplus/NewTreatmentView.fxml"));
@@ -302,6 +346,11 @@ public class AllTreatmentController {
         }
     }
 
+    /**
+     * Opens the Treatment details window for the given treatment.
+     *
+     * @param treatment the Treatment to display
+     */
     public void treatmentWindow(Treatment treatment){
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/de/hitec/nhplus/TreatmentView.fxml"));
