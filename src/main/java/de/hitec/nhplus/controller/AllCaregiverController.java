@@ -22,7 +22,6 @@ import java.sql.SQLException;
 /**
  * The <code>AllCareGiverController</code> contains the entire logic of the AllCaregiver view. It determines which data is displayed and how to react to events.
  */
-
 public class AllCaregiverController {
     @FXML
     private TableView<CareGiver> tableView;

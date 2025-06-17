@@ -3,7 +3,9 @@ package de.hitec.nhplus.utils;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-
+/**
+ * Helper class to convert dates.
+ * */
 public class DateConverter {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
