@@ -74,10 +74,5 @@ https://markdown.de/ einsehen.
             <td>Passed</td>   
             <td>/</td>
         </tr>
-        <tr>
-            <td>User Story 3 TF1 Patienten Löschen</td>
-            <td>Passed</td>   
-            <td>/</td>
-        </tr>
     </tbody>
 </table>
