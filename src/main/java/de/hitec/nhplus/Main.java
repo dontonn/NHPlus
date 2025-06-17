@@ -10,7 +10,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-
+/**
+ *  The main class to start the program.
+ * */
 public class Main extends Application {
 
     private Stage primaryStage;
@@ -20,7 +22,9 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
         mainWindow();
     }
-
+    /**
+     * Loads the main window and sets its title and properties.
+     * */
     public void mainWindow() {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/de/hitec/nhplus/MainWindowView.fxml"));
@@ -41,7 +45,9 @@ public class Main extends Application {
             exception.printStackTrace();
         }
     }
-
+    /**
+     * Launches the Program
+     * */
     public static void main(String[] args) {
         launch(args);
     }

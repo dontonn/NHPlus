@@ -2,8 +2,11 @@ package de.hitec.nhplus.datastorage;
 
 import java.sql.SQLException;
 import java.util.List;
-
+/**
+ * Interface to implement the DAO pattern
+ * */
 public interface Dao<T> {
+
     void create(T t) throws SQLException;
 
     T read(long key) throws SQLException;
