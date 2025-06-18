@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.hitec.nhplus.controller.LoginController"
+      alignment="CENTER"
+      spacing="20"
+      style="-fx-background-color: #2d2d30; -fx-min-width: 400; -fx-min-height: 500;">
+
+    <padding>
+        <Insets bottom="40" left="40" right="40" top="40"/>
+    </padding>
+
+    <!-- Logo/Title -->
+    <VBox alignment="CENTER" spacing="15">
+        <Label text="+"
+               style="-fx-text-fill: #4a90e2; -fx-font-weight: 300; -fx-font-size: 48px;"/>
+        <Label text="NHPlus"
+               style="-fx-text-fill: white; -fx-font-weight: 300; -fx-font-size: 32px;"/>
+        <Label text="Pflegeheim Management System"
+               style="-fx-text-fill: #a0a0a0; -fx-font-size: 14px; -fx-font-weight: 400;"/>
+    </VBox>
+
+    <!-- Login Form -->
+    <VBox alignment="CENTER" spacing="20"
+          style="-fx-background-color: #404040; -fx-background-radius: 12; -fx-border-color: #555; -fx-border-width: 1; -fx-border-radius: 12;"
+          maxWidth="320">
+        <padding>
+            <Insets bottom="30" left="30" right="30" top="30"/>
+        </padding>
+
+        <Label text="Anmeldung"
+               style="-fx-font-size: 20px; -fx-font-weight: 500; -fx-text-fill: white;"/>
+
+        <!-- Status Label for messages -->
+        <Label fx:id="statusLabel"
+               text=""
+               style="-fx-font-size: 12px; -fx-font-weight: 500;"
+               wrapText="true"
+               maxWidth="260"/>
+
+        <!-- Username Field -->
+        <VBox spacing="8">
+            <Label text="Benutzername:"
+                   style="-fx-font-weight: 500; -fx-text-fill: #e0e0e0; -fx-font-size: 13px;"/>
+            <TextField fx:id="usernameField"
+                       promptText="Benutzername eingeben"
+                       style="-fx-pref-height: 38; -fx-background-color: #505050; -fx-background-radius: 6; -fx-border-color: #666; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: white; -fx-prompt-text-fill: #999;"
+                       onKeyPressed="#handleKeyPressed"/>
+        </VBox>
+
+        <!-- Password Field -->
+        <VBox spacing="8">
+            <Label text="Passwort:"
+                   style="-fx-font-weight: 500; -fx-text-fill: #e0e0e0; -fx-font-size: 13px;"/>
+            <PasswordField fx:id="passwordField"
+                           promptText="Passwort eingeben"
+                           style="-fx-pref-height: 38; -fx-background-color: #505050; -fx-background-radius: 6; -fx-border-color: #666; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: white; -fx-prompt-text-fill: #999;"
+                           onKeyPressed="#handleKeyPressed"/>
+        </VBox>
+
+        <!-- Login Button -->
+        <Button fx:id="loginButton"
+                text="Anmelden"
+                onAction="#handleLogin"
+                style="-fx-background-color: #4a90e2; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: 500; -fx-background-radius: 6; -fx-pref-width: 260; -fx-pref-height: 40; -fx-cursor: hand;"
+                defaultButton="true"/>
+
+        <!-- Info Text -->
+        <Label text="Standard Login: admin / Admin123+"
+               style="-fx-text-fill: #999; -fx-font-size: 11px;"
+               wrapText="true"/>
+    </VBox>
+
+    <!-- Footer -->
+    <Label text="© 2025 NHPlus - Professionell und Sicher"
+           style="-fx-text-fill: #666; -fx-font-size: 11px;"/>
+
+</VBox>
