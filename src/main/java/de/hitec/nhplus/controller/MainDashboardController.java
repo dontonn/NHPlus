@@ -1,7 +1,7 @@
 package de.hitec.nhplus.controller;
 
 import de.hitec.nhplus.Main;
-import de.hitec.nhplus.model.Caregiver;
+import de.hitec.nhplus.model.LoginUser;
 import de.hitec.nhplus.service.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -53,23 +53,23 @@ public class MainDashboardController implements Initializable {
      * Sets up the user interface based on the logged-in user
      */
     private void setupUserInterface() {
-        Caregiver loggedInCaregiver = Session.getInstance().getLoggedInCaregiver();
+        LoginUser loggedInLoginUser = Session.getInstance().getLoggedInCaregiver();
 
-        if (loggedInCaregiver != null) {
+        if (loggedInLoginUser != null) {
             // DEBUG: Print user details
             System.out.println("🔍 DEBUG - Logged in user details:");
-            System.out.println("   Username: " + loggedInCaregiver.getUsername());
-            System.out.println("   First Name: " + loggedInCaregiver.getFirstName());
-            System.out.println("   Last Name: " + loggedInCaregiver.getSurname());
-            System.out.println("   Is Admin: " + loggedInCaregiver.isAdmin());
-            System.out.println("   PID: " + loggedInCaregiver.getPid());
+            System.out.println("   Username: " + loggedInLoginUser.getUsername());
+            System.out.println("   First Name: " + loggedInLoginUser.getFirstName());
+            System.out.println("   Last Name: " + loggedInLoginUser.getSurname());
+            System.out.println("   Is Admin: " + loggedInLoginUser.isAdmin());
+            System.out.println("   PID: " + loggedInLoginUser.getPid());
 
             // Update welcome message with user's name
-            welcomeLabel.setText("Willkommen, " + loggedInCaregiver.getFirstName() + " " + loggedInCaregiver.getSurname());
+            welcomeLabel.setText("Willkommen, " + loggedInLoginUser.getFirstName() + " " + loggedInLoginUser.getSurname());
 
             // Update user info label
-            String userInfo = "Angemeldet als: " + loggedInCaregiver.getUsername();
-            if (loggedInCaregiver.isAdmin()) {
+            String userInfo = "Angemeldet als: " + loggedInLoginUser.getUsername();
+            if (loggedInLoginUser.isAdmin()) {
                 userInfo += " (Administrator)";
                 System.out.println("✅ User is ADMIN - showing admin area");
             } else {
@@ -78,7 +78,7 @@ public class MainDashboardController implements Initializable {
             userInfoLabel.setText(userInfo);
 
             // Show admin area only for administrators
-            boolean isAdmin = loggedInCaregiver.isAdmin();
+            boolean isAdmin = loggedInLoginUser.isAdmin();
             adminArea.setVisible(isAdmin);
             adminArea.setManaged(isAdmin);
 

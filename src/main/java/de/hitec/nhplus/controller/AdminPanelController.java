@@ -1,8 +1,8 @@
 package de.hitec.nhplus.controller;
 
-import de.hitec.nhplus.datastorage.CaregiverDao;
+import de.hitec.nhplus.datastorage.LoginUserDao;
 import de.hitec.nhplus.datastorage.DaoFactory;
-import de.hitec.nhplus.model.Caregiver;
+import de.hitec.nhplus.model.LoginUser;
 import de.hitec.nhplus.service.Session;
 import de.hitec.nhplus.utils.AuditLog;
 import de.hitec.nhplus.utils.PasswordUtil;
@@ -48,22 +48,22 @@ public class AdminPanelController implements Initializable {
     @FXML private Label statusLabel;
 
     // Table Controls
-    @FXML private TableView<Caregiver> usersTable;
-    @FXML private TableColumn<Caregiver, Long> idColumn;
-    @FXML private TableColumn<Caregiver, String> usernameColumn;
-    @FXML private TableColumn<Caregiver, String> firstNameColumn;
-    @FXML private TableColumn<Caregiver, String> lastNameColumn;
-    @FXML private TableColumn<Caregiver, String> phoneColumn;
-    @FXML private TableColumn<Caregiver, String> birthdayColumn;
-    @FXML private TableColumn<Caregiver, Boolean> adminColumn;
-    @FXML private TableColumn<Caregiver, Void> actionsColumn;
+    @FXML private TableView<LoginUser> usersTable;
+    @FXML private TableColumn<LoginUser, Long> idColumn;
+    @FXML private TableColumn<LoginUser, String> usernameColumn;
+    @FXML private TableColumn<LoginUser, String> firstNameColumn;
+    @FXML private TableColumn<LoginUser, String> lastNameColumn;
+    @FXML private TableColumn<LoginUser, String> phoneColumn;
+    @FXML private TableColumn<LoginUser, String> birthdayColumn;
+    @FXML private TableColumn<LoginUser, Boolean> adminColumn;
+    @FXML private TableColumn<LoginUser, Void> actionsColumn;
 
     // Other Controls
     @FXML private Label userCountLabel;
     @FXML private Button refreshButton;
 
-    private final ObservableList<Caregiver> usersList = FXCollections.observableArrayList();
-    private CaregiverDao caregiverDao;
+    private final ObservableList<LoginUser> usersList = FXCollections.observableArrayList();
+    private LoginUserDao loginUserDao;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -86,7 +86,7 @@ public class AdminPanelController implements Initializable {
 
         // Admin column with custom cell factory
         adminColumn.setCellValueFactory(new PropertyValueFactory<>("admin"));
-        adminColumn.setCellFactory(column -> new TableCell<Caregiver, Boolean>() {
+        adminColumn.setCellFactory(column -> new TableCell<LoginUser, Boolean>() {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
@@ -100,7 +100,7 @@ public class AdminPanelController implements Initializable {
         });
 
         // Actions column with edit and delete buttons
-        actionsColumn.setCellFactory(column -> new TableCell<Caregiver, Void>() {
+        actionsColumn.setCellFactory(column -> new TableCell<LoginUser, Void>() {
             private final Button editButton = new Button("✏️");
             private final Button deleteButton = new Button("🗑️");
             private final HBox actionBox = new HBox(5);
@@ -108,14 +108,14 @@ public class AdminPanelController implements Initializable {
             {
                 editButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 12px; -fx-pref-width: 30;");
                 editButton.setOnAction(event -> {
-                    Caregiver caregiver = getTableView().getItems().get(getIndex());
-                    handleEditUser(caregiver);
+                    LoginUser loginUser = getTableView().getItems().get(getIndex());
+                    handleEditUser(loginUser);
                 });
 
                 deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 12px; -fx-pref-width: 30;");
                 deleteButton.setOnAction(event -> {
-                    Caregiver caregiver = getTableView().getItems().get(getIndex());
-                    handleDeleteUser(caregiver);
+                    LoginUser loginUser = getTableView().getItems().get(getIndex());
+                    handleDeleteUser(loginUser);
                 });
 
                 actionBox.getChildren().addAll(editButton, deleteButton);
@@ -153,8 +153,8 @@ public class AdminPanelController implements Initializable {
      */
     private void checkUsernameAvailability(String username) {
         try {
-            caregiverDao = DaoFactory.getDaoFactory().createCaregiverDAO();
-            boolean exists = caregiverDao.usernameExists(username);
+            loginUserDao = DaoFactory.getDaoFactory().createCaregiverDAO();
+            boolean exists = loginUserDao.usernameExists(username);
 
             if (exists) {
                 usernameField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
@@ -181,7 +181,7 @@ public class AdminPanelController implements Initializable {
 
         try {
             // Create new caregiver
-            Caregiver newCaregiver = new Caregiver(
+            LoginUser newLoginUser = new LoginUser(
                     usernameField.getText().trim(),
                     firstNameField.getText().trim(),
                     lastNameField.getText().trim(),
@@ -194,12 +194,12 @@ public class AdminPanelController implements Initializable {
             );
 
             // Save to database
-            caregiverDao = DaoFactory.getDaoFactory().createCaregiverDAO();
-            caregiverDao.create(newCaregiver);
+            loginUserDao = DaoFactory.getDaoFactory().createCaregiverDAO();
+            loginUserDao.create(newLoginUser);
 
             // Log the action
             AuditLog.writeLog(Session.getInstance().getLoggedInCaregiver(),
-                    "User created: " + newCaregiver.getUsername() + " (Admin: " + newCaregiver.isAdmin() + ")");
+                    "User created: " + newLoginUser.getUsername() + " (Admin: " + newLoginUser.isAdmin() + ")");
 
             showSuccessStatus("✅ Benutzer erfolgreich erstellt!");
             clearForm();
@@ -268,8 +268,8 @@ public class AdminPanelController implements Initializable {
 
         // Check username uniqueness again
         try {
-            caregiverDao = DaoFactory.getDaoFactory().createCaregiverDAO();
-            if (caregiverDao.usernameExists(username.trim())) {
+            loginUserDao = DaoFactory.getDaoFactory().createCaregiverDAO();
+            if (loginUserDao.usernameExists(username.trim())) {
                 showErrorStatus("❌ Benutzername bereits vergeben!");
                 return false;
             }
@@ -309,15 +309,15 @@ public class AdminPanelController implements Initializable {
      */
     private void loadUsers() {
         try {
-            caregiverDao = DaoFactory.getDaoFactory().createCaregiverDAO();
-            ArrayList<Caregiver> caregivers = (ArrayList<Caregiver>) caregiverDao.readAll();
+            loginUserDao = DaoFactory.getDaoFactory().createCaregiverDAO();
+            ArrayList<LoginUser> loginUsers = (ArrayList<LoginUser>) loginUserDao.readAll();
 
             usersList.clear();
-            usersList.addAll(caregivers);
+            usersList.addAll(loginUsers);
 
-            userCountLabel.setText("Anzahl Benutzer: " + caregivers.size());
+            userCountLabel.setText("Anzahl Benutzer: " + loginUsers.size());
 
-            System.out.println("✅ Loaded " + caregivers.size() + " users");
+            System.out.println("✅ Loaded " + loginUsers.size() + " users");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -328,11 +328,11 @@ public class AdminPanelController implements Initializable {
     /**
      * Handles user editing
      */
-    private void handleEditUser(Caregiver caregiver) {
+    private void handleEditUser(LoginUser loginUser) {
         // Create edit dialog
-        Dialog<Caregiver> dialog = new Dialog<>();
+        Dialog<LoginUser> dialog = new Dialog<>();
         dialog.setTitle("Benutzer bearbeiten");
-        dialog.setHeaderText("Bearbeiten Sie die Benutzerdaten von: " + caregiver.getUsername());
+        dialog.setHeaderText("Bearbeiten Sie die Benutzerdaten von: " + loginUser.getUsername());
 
         // Set the button types
         ButtonType saveButtonType = new ButtonType("💾 Speichern", ButtonBar.ButtonData.OK_DONE);
@@ -344,12 +344,12 @@ public class AdminPanelController implements Initializable {
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
-        TextField editFirstNameField = new TextField(caregiver.getFirstName());
-        TextField editLastNameField = new TextField(caregiver.getSurname());
-        TextField editPhoneField = new TextField(caregiver.getTelephoneNumber());
+        TextField editFirstNameField = new TextField(loginUser.getFirstName());
+        TextField editLastNameField = new TextField(loginUser.getSurname());
+        TextField editPhoneField = new TextField(loginUser.getTelephoneNumber());
         PasswordField editPasswordField = new PasswordField();
         CheckBox editAdminCheckBox = new CheckBox();
-        editAdminCheckBox.setSelected(caregiver.isAdmin());
+        editAdminCheckBox.setSelected(loginUser.isAdmin());
 
         grid.add(new Label("Vorname:"), 0, 0);
         grid.add(editFirstNameField, 1, 0);
@@ -384,10 +384,10 @@ public class AdminPanelController implements Initializable {
                     }
 
                     // Update caregiver data
-                    caregiver.setFirstName(editFirstNameField.getText().trim());
-                    caregiver.setSurname(editLastNameField.getText().trim());
-                    caregiver.setTelephoneNumber(editPhoneField.getText().trim());
-                    caregiver.setIsAdmin(editAdminCheckBox.isSelected());
+                    loginUser.setFirstName(editFirstNameField.getText().trim());
+                    loginUser.setSurname(editLastNameField.getText().trim());
+                    loginUser.setTelephoneNumber(editPhoneField.getText().trim());
+                    loginUser.setIsAdmin(editAdminCheckBox.isSelected());
 
                     // Update password if provided
                     String newPassword = editPasswordField.getText();
@@ -397,16 +397,16 @@ public class AdminPanelController implements Initializable {
                             showErrorStatus("❌ " + passwordError);
                             return null;
                         }
-                        caregiver.setPassword_hash(PasswordUtil.generatePassword(newPassword));
+                        loginUser.setPassword_hash(PasswordUtil.generatePassword(newPassword));
                     }
 
                     // Save to database
-                    caregiverDao = DaoFactory.getDaoFactory().createCaregiverDAO();
-                    caregiverDao.update(caregiver);
+                    loginUserDao = DaoFactory.getDaoFactory().createCaregiverDAO();
+                    loginUserDao.update(loginUser);
 
                     // Log the action
                     AuditLog.writeLog(Session.getInstance().getLoggedInCaregiver(),
-                            "User edited: " + caregiver.getUsername());
+                            "User edited: " + loginUser.getUsername());
 
                     showSuccessStatus("✅ Benutzer erfolgreich aktualisiert!");
                     loadUsers();
@@ -415,16 +415,16 @@ public class AdminPanelController implements Initializable {
                     e.printStackTrace();
                     showErrorStatus("❌ Fehler beim Aktualisieren: " + e.getMessage());
                 }
-                return caregiver;
+                return loginUser;
             }
             return null;
         });
 
         dialog.showAndWait();
     }
-    private void handleDeleteUser(Caregiver caregiver) {
+    private void handleDeleteUser(LoginUser loginUser) {
         // Prevent deletion of current user
-        if (caregiver.getPid() == Session.getInstance().getLoggedInCaregiver().getPid()) {
+        if (loginUser.getPid() == Session.getInstance().getLoggedInCaregiver().getPid()) {
             showErrorStatus("❌ Sie können sich selbst nicht löschen!");
             return;
         }
@@ -433,16 +433,16 @@ public class AdminPanelController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Benutzer löschen");
         alert.setHeaderText("Möchten Sie diesen Benutzer wirklich löschen?");
-        alert.setContentText("Benutzer: " + caregiver.getUsername() + " (" + caregiver.getFirstName() + " " + caregiver.getSurname() + ")");
+        alert.setContentText("Benutzer: " + loginUser.getUsername() + " (" + loginUser.getFirstName() + " " + loginUser.getSurname() + ")");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                caregiverDao = DaoFactory.getDaoFactory().createCaregiverDAO();
-                caregiverDao.deleteById(caregiver.getPid());
+                loginUserDao = DaoFactory.getDaoFactory().createCaregiverDAO();
+                loginUserDao.deleteById(loginUser.getPid());
 
                 AuditLog.writeLog(Session.getInstance().getLoggedInCaregiver(),
-                        "User deleted: " + caregiver.getUsername());
+                        "User deleted: " + loginUser.getUsername());
 
                 showSuccessStatus("✅ Benutzer gelöscht!");
                 loadUsers();

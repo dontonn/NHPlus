@@ -13,8 +13,8 @@ public class DaoFactory {
         }
         return DaoFactory.instance;
     }
-    public CaregiverDao createCaregiverDAO() {
-        return new CaregiverDao(ConnectionBuilder.getConnection());
+    public LoginUserDao createCaregiverDAO() {
+        return new LoginUserDao(ConnectionBuilder.getConnection());
     }
 
     public TreatmentDao createTreatmentDao() {

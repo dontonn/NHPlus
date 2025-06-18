@@ -1,6 +1,6 @@
 package de.hitec.nhplus.utils;
 
-import de.hitec.nhplus.model.Caregiver;
+import de.hitec.nhplus.model.LoginUser;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -22,10 +22,10 @@ public class AuditLog {
      * The file is located in the "logs" directory.
      * If the file does not exist, it is created. If it does exist, the log message is appended to the file.
      *
-     * @param caregiver The caregiver who performed the action.
+     * @param loginUser The caregiver who performed the action.
      * @param action The action that was performed.
      */
-    public static void writeLog(Caregiver caregiver, String action) {
+    public static void writeLog(LoginUser loginUser, String action) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-dd");
         String fileName = "logs/AuditLog_" + dtf.format(LocalDate.now()) + ".txt";
 
@@ -36,7 +36,7 @@ public class AuditLog {
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
-            writer.write(formatLogMessage(caregiver, action));
+            writer.write(formatLogMessage(loginUser, action));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -47,15 +47,15 @@ public class AuditLog {
      * The message includes the current date and time, the caregiver's PID and username, and the action that was performed.
      * The date and time are formatted as "yyyy-MM-dd HH:mm:ss".
      *
-     * @param caregiver The caregiver who performed the action.
+     * @param loginUser The caregiver who performed the action.
      * @param action The action that was performed.
      * @return The formatted log message.
      */
-    private static String formatLogMessage(Caregiver caregiver, String action) {
+    private static String formatLogMessage(LoginUser loginUser, String action) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String currentDateTime = dtf.format(LocalDateTime.now());
 
         return String.format("[%s] User: %s (ID: %d) | Action: %s%n",
-                currentDateTime, caregiver.getUsername(), caregiver.getPid(), action);
+                currentDateTime, loginUser.getUsername(), loginUser.getPid(), action);
     }
 }

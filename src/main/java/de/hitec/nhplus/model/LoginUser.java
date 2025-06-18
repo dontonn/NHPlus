@@ -12,7 +12,7 @@ import java.time.LocalDate;
 /**
  * Caregiver model class representing a nurse/caregiver in the system
  */
-public class Caregiver extends Person {
+public class LoginUser extends Person {
     // The unique identifier for the Caregiver
     private SimpleLongProperty pid;
     // The username of the Caregiver
@@ -45,7 +45,7 @@ public class Caregiver extends Person {
      * @param locked A flag indicating whether the Caregiver is locked.
      * @param lockedDate The date when the Caregiver was locked.
      */
-    public Caregiver(String username, String firstName, String surname, LocalDate dateOfBirth,
+    public LoginUser(String username, String firstName, String surname, LocalDate dateOfBirth,
                      String telephoneNumber, String password, boolean isAdmin, boolean locked, String lockedDate) {
         super(firstName, surname);
         this.username = new SimpleStringProperty(username);
@@ -70,7 +70,7 @@ public class Caregiver extends Person {
      * @param password_hash The already hashed password of the Caregiver.
      * @param isAdmin A flag indicating whether the Caregiver is an admin.
      */
-    public Caregiver(long pid, String username, String firstName, String surname, LocalDate dateOfBirth,
+    public LoginUser(long pid, String username, String firstName, String surname, LocalDate dateOfBirth,
                      String telephoneNumber, String password_hash, boolean isAdmin) {
         super(firstName, surname);
         this.pid = new SimpleLongProperty(pid);

@@ -1,7 +1,7 @@
 package de.hitec.nhplus.service;
 
 import de.hitec.nhplus.datastorage.ConnectionBuilder;
-import de.hitec.nhplus.model.Caregiver;
+import de.hitec.nhplus.model.LoginUser;
 import de.hitec.nhplus.utils.DateConverter;
 import de.hitec.nhplus.utils.PasswordUtil;
 
@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * This class provides services related to the Caregiver model.
  * It contains a method for authenticating a caregiver based on their username and password.
  */
-public class CaregiverService {
+public class LoginUserService {
 
     /**
      * This method authenticates a caregiver based on their username and password.
@@ -30,11 +30,11 @@ public class CaregiverService {
      * @param password The password of the caregiver.
      * @return The authenticated caregiver, or null if the authentication failed.
      */
-    public Caregiver authenticate(String username, String password) {
+    public LoginUser authenticate(String username, String password) {
         if (username == null || password == null) {
             return null;
         }
-        Caregiver caregiver = null;
+        LoginUser loginUser = null;
         try {
             Connection connection = ConnectionBuilder.getConnection();
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM caregiver WHERE username = ? AND locked is not true");
@@ -47,7 +47,7 @@ public class CaregiverService {
                 boolean password_match = PasswordUtil.checkPassword(password, password_hash);
 
                 if (password_match) {
-                    caregiver = new Caregiver(
+                    loginUser = new LoginUser(
                             resultSet.getLong("pid"),
                             resultSet.getString("username"),
                             resultSet.getString("firstname"),
@@ -62,6 +62,6 @@ public class CaregiverService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return caregiver;
+        return loginUser;
     }
 }

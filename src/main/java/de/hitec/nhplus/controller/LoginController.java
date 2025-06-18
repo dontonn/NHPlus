@@ -1,8 +1,8 @@
 package de.hitec.nhplus.controller;
 
 import de.hitec.nhplus.Main;
-import de.hitec.nhplus.model.Caregiver;
-import de.hitec.nhplus.service.CaregiverService;
+import de.hitec.nhplus.model.LoginUser;
+import de.hitec.nhplus.service.LoginUserService;
 import de.hitec.nhplus.service.Session;
 import de.hitec.nhplus.utils.PasswordUtil;
 import javafx.event.ActionEvent;
@@ -29,7 +29,7 @@ public class LoginController {
     @FXML
     private PasswordField passwordField;
 
-    private final CaregiverService caregiverService = new CaregiverService();
+    private final LoginUserService loginUserService = new LoginUserService();
 
     /**
      * Enhanced login method that redirects to MainDashboard after successful login
@@ -57,22 +57,22 @@ public class LoginController {
             return;
         }
 
-        Caregiver caregiver = null;
+        LoginUser loginUser = null;
 
         try {
-            caregiver = caregiverService.authenticate(username, password);
+            loginUser = loginUserService.authenticate(username, password);
         } catch (Exception e) {
             e.printStackTrace();
             clearPasswordAndShowError("Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.");
             return;
         }
 
-        if (caregiver != null) {
+        if (loginUser != null) {
             // A_3: Success popup on successful login
             showSuccessPopup();
 
             // Set the logged in caregiver in the session
-            Session.getInstance().setLoggedInCaregiver(caregiver);
+            Session.getInstance().setLoggedInCaregiver(loginUser);
 
             // NEW: Redirect to MainDashboard (our new main window)
             redirectToMainDashboard();

@@ -1,6 +1,6 @@
 package de.hitec.nhplus.service;
 
-import de.hitec.nhplus.model.Caregiver;
+import de.hitec.nhplus.model.LoginUser;
 
 /**
  * This class represents a session in the application.
@@ -12,7 +12,7 @@ public class Session {
     private static Session instance;
 
     // The caregiver who is currently logged in
-    private Caregiver loggedInCaregiver;
+    private LoginUser loggedInLoginUser;
 
     /**
      * The private constructor prevents other classes from creating new instances of the Session class.
@@ -37,24 +37,24 @@ public class Session {
      *
      * @return The caregiver who is currently logged in.
      */
-    public Caregiver getLoggedInCaregiver() {
-        return loggedInCaregiver;
+    public LoginUser getLoggedInCaregiver() {
+        return loggedInLoginUser;
     }
 
     /**
      * This method sets the caregiver who is currently logged in.
      *
-     * @param loggedInCaregiver The caregiver who is currently logged in.
+     * @param loggedInLoginUser The caregiver who is currently logged in.
      */
-    public void setLoggedInCaregiver(Caregiver loggedInCaregiver) {
-        this.loggedInCaregiver = loggedInCaregiver;
+    public void setLoggedInCaregiver(LoginUser loggedInLoginUser) {
+        this.loggedInLoginUser = loggedInLoginUser;
     }
 
     /**
      * This method logs out the current caregiver by setting the loggedInCaregiver to null.
      */
     public void logout() {
-        loggedInCaregiver = null;
+        loggedInLoginUser = null;
     }
 
     /**
@@ -63,7 +63,7 @@ public class Session {
      * @return True if a user is logged in, false otherwise.
      */
     public boolean isLoggedIn() {
-        return loggedInCaregiver != null;
+        return loggedInLoginUser != null;
     }
 
     /**
@@ -72,6 +72,6 @@ public class Session {
      * @return True if the logged in user is an admin, false otherwise.
      */
     public boolean isCurrentUserAdmin() {
-        return loggedInCaregiver != null && loggedInCaregiver.isAdmin();
+        return loggedInLoginUser != null && loggedInLoginUser.isAdmin();
     }
 }

@@ -4,10 +4,10 @@ import de.hitec.nhplus.datastorage.ConnectionBuilder;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.PatientDao;
 import de.hitec.nhplus.datastorage.TreatmentDao;
-import de.hitec.nhplus.datastorage.CaregiverDao;
+import de.hitec.nhplus.datastorage.LoginUserDao;
 import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.model.Treatment;
-import de.hitec.nhplus.model.Caregiver;
+import de.hitec.nhplus.model.LoginUser;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -145,14 +145,14 @@ public class SetUpDB {
      */
     private static void setUpCaregivers() {
         try {
-            CaregiverDao dao = DaoFactory.getDaoFactory().createCaregiverDAO();
+            LoginUserDao dao = DaoFactory.getDaoFactory().createCaregiverDAO();
 
             // Admin User (password: Admin123+)
-            dao.create(new Caregiver("admin", "Admin", "Administrator",
+            dao.create(new LoginUser("admin", "Admin", "Administrator",
                     convertStringToLocalDate("1990-01-01"), "0123-456-789", "Admin123+", true, false, null));
 
             // Regular User (password: User123-)
-            dao.create(new Caregiver("user", "Test", "User",
+            dao.create(new LoginUser("user", "Test", "User",
                     convertStringToLocalDate("1985-05-15"), "0987-654-321", "User123-", false, false, null));
 
             System.out.println("✅ Caregiver test data created!");

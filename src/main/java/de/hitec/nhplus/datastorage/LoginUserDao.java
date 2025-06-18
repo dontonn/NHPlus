@@ -1,6 +1,6 @@
 package de.hitec.nhplus.datastorage;
 
-import de.hitec.nhplus.model.Caregiver;
+import de.hitec.nhplus.model.LoginUser;
 import de.hitec.nhplus.utils.DateConverter;
 
 import java.sql.*;
@@ -11,38 +11,38 @@ import java.util.ArrayList;
  * This class provides data access operations for the Caregiver model.
  * It extends the DaoImp class and overrides its methods to provide specific implementations for the Caregiver model.
  */
-public class CaregiverDao extends DaoImp<Caregiver>{
+public class LoginUserDao extends DaoImp<LoginUser>{
 
     /**
      * This constructor creates a new CaregiverDao with the given database connection.
      *
      * @param connection The database connection.
      */
-    public CaregiverDao(Connection connection) {
+    public LoginUserDao(Connection connection) {
         super(connection);
     }
 
     /**
      * This method returns a PreparedStatement for creating a new caregiver in the database.
      *
-     * @param caregiver The caregiver to be created.
+     * @param loginUser The caregiver to be created.
      * @return The PreparedStatement for creating the caregiver.
      */
     @Override
-    protected PreparedStatement getCreateStatement(Caregiver caregiver) {
+    protected PreparedStatement getCreateStatement(LoginUser loginUser) {
         // SQL statement for creating a new caregiver
         final String SQL = "INSERT INTO caregiver (username, firstname, surname, dateOfBirth, telephoneNumber, password_hash, isAdmin) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = this.connection.prepareStatement(SQL);
-            preparedStatement.setString(1, caregiver.getUsername());
-            preparedStatement.setString(2, caregiver.getFirstName());
-            preparedStatement.setString(3, caregiver.getSurname());
-            preparedStatement.setString(4, caregiver.getDateOfBirth());
-            preparedStatement.setString(5, caregiver.getTelephoneNumber());
-            preparedStatement.setString(6, caregiver.getPassword_hash());
-            preparedStatement.setBoolean(7, caregiver.isAdmin());
+            preparedStatement.setString(1, loginUser.getUsername());
+            preparedStatement.setString(2, loginUser.getFirstName());
+            preparedStatement.setString(3, loginUser.getSurname());
+            preparedStatement.setString(4, loginUser.getDateOfBirth());
+            preparedStatement.setString(5, loginUser.getTelephoneNumber());
+            preparedStatement.setString(6, loginUser.getPassword_hash());
+            preparedStatement.setBoolean(7, loginUser.isAdmin());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -78,8 +78,8 @@ public class CaregiverDao extends DaoImp<Caregiver>{
      * @throws SQLException If a database access error occurs.
      */
     @Override
-    protected Caregiver getInstanceFromResultSet(ResultSet set) throws SQLException {
-        return new Caregiver(
+    protected LoginUser getInstanceFromResultSet(ResultSet set) throws SQLException {
+        return new LoginUser(
                 set.getLong("pid"),
                 set.getString("username"),
                 set.getString("firstname"),
@@ -117,22 +117,22 @@ public class CaregiverDao extends DaoImp<Caregiver>{
      * @throws SQLException If a database access error occurs.
      */
     @Override
-    protected ArrayList<Caregiver> getListFromResultSet(ResultSet set) throws SQLException {
-        ArrayList<Caregiver> caregivers = new ArrayList<>();
+    protected ArrayList<LoginUser> getListFromResultSet(ResultSet set) throws SQLException {
+        ArrayList<LoginUser> loginUsers = new ArrayList<>();
         while (set.next()) {
-            caregivers.add(getInstanceFromResultSet(set));
+            loginUsers.add(getInstanceFromResultSet(set));
         }
-        return caregivers;
+        return loginUsers;
     }
 
     /**
      * This method returns a PreparedStatement for updating a caregiver in the database.
      *
-     * @param caregiver The caregiver to be updated.
+     * @param loginUser The caregiver to be updated.
      * @return The PreparedStatement for updating the caregiver.
      */
     @Override
-    protected PreparedStatement getUpdateStatement(Caregiver caregiver) {
+    protected PreparedStatement getUpdateStatement(LoginUser loginUser) {
         // SQL statement for updating a caregiver
         final String SQL = "UPDATE caregiver SET " +
                 "username = ?, " +
@@ -146,14 +146,14 @@ public class CaregiverDao extends DaoImp<Caregiver>{
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = this.connection.prepareStatement(SQL);
-            preparedStatement.setString(1, caregiver.getUsername());
-            preparedStatement.setString(2, caregiver.getFirstName());
-            preparedStatement.setString(3, caregiver.getSurname());
-            preparedStatement.setString(4, caregiver.getDateOfBirth());
-            preparedStatement.setString(5, caregiver.getTelephoneNumber());
-            preparedStatement.setString(6, caregiver.getPassword_hash());
-            preparedStatement.setBoolean(7, caregiver.isAdmin());
-            preparedStatement.setLong(8, caregiver.getPid());
+            preparedStatement.setString(1, loginUser.getUsername());
+            preparedStatement.setString(2, loginUser.getFirstName());
+            preparedStatement.setString(3, loginUser.getSurname());
+            preparedStatement.setString(4, loginUser.getDateOfBirth());
+            preparedStatement.setString(5, loginUser.getTelephoneNumber());
+            preparedStatement.setString(6, loginUser.getPassword_hash());
+            preparedStatement.setBoolean(7, loginUser.isAdmin());
+            preparedStatement.setLong(8, loginUser.getPid());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
