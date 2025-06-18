@@ -8,8 +8,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-
+/**
+ *  The main class to start the program.
+ * */
 public class Main extends Application {
+
     private Stage primaryStage;
 
     @Override
@@ -35,7 +38,9 @@ public class Main extends Application {
             exception.printStackTrace();
         }
     }
-
+    /**
+     * Launches the Program
+     * */
     public static void main(String[] args) {
         launch(args);
     }

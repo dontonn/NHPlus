@@ -22,6 +22,7 @@ public class PatientDao extends DaoImp<Patient> {
         super(connection);
     }
 
+
     /**
      * Generates a <code>PreparedStatement</code> to persist the given object of <code>Patient</code>.
      *
@@ -32,15 +33,14 @@ public class PatientDao extends DaoImp<Patient> {
     protected PreparedStatement getCreateStatement(Patient patient) {
         PreparedStatement preparedStatement = null;
         try {
-            final String SQL = "INSERT INTO patient (firstname, surname, dateOfBirth, carelevel, roomnumber, assets) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            final String SQL = "INSERT INTO patient (firstname, surname, dateOfBirth, carelevel, roomnumber) " +
+                    "VALUES (?, ?, ?, ?, ?)";
             preparedStatement = this.connection.prepareStatement(SQL);
             preparedStatement.setString(1, patient.getFirstName());
             preparedStatement.setString(2, patient.getSurname());
             preparedStatement.setString(3, patient.getDateOfBirth());
             preparedStatement.setString(4, patient.getCareLevel());
             preparedStatement.setString(5, patient.getRoomNumber());
-            preparedStatement.setString(6, patient.getAssets());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -80,8 +80,7 @@ public class PatientDao extends DaoImp<Patient> {
                 result.getString(3),
                 DateConverter.convertStringToLocalDate(result.getString(4)),
                 result.getString(5),
-                result.getString(6),
-                result.getString(7));
+                result.getString(6));
     }
 
     /**
@@ -115,7 +114,7 @@ public class PatientDao extends DaoImp<Patient> {
             LocalDate date = DateConverter.convertStringToLocalDate(result.getString(4));
             Patient patient = new Patient(result.getInt(1), result.getString(2),
                     result.getString(3), date,
-                    result.getString(5), result.getString(6), result.getString(7));
+                    result.getString(5), result.getString(6));
             list.add(patient);
         }
         return list;
@@ -138,8 +137,7 @@ public class PatientDao extends DaoImp<Patient> {
                             "surname = ?, " +
                             "dateOfBirth = ?, " +
                             "carelevel = ?, " +
-                            "roomnumber = ?, " +
-                            "assets = ? " +
+                            "roomnumber = ? " +
                             "WHERE pid = ?";
             preparedStatement = this.connection.prepareStatement(SQL);
             preparedStatement.setString(1, patient.getFirstName());
@@ -147,8 +145,7 @@ public class PatientDao extends DaoImp<Patient> {
             preparedStatement.setString(3, patient.getDateOfBirth());
             preparedStatement.setString(4, patient.getCareLevel());
             preparedStatement.setString(5, patient.getRoomNumber());
-            preparedStatement.setString(6, patient.getAssets());
-            preparedStatement.setLong(7, patient.getPid());
+            preparedStatement.setLong(6, patient.getPid());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

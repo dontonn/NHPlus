@@ -34,15 +34,16 @@ public class TreatmentDao extends DaoImp<Treatment> {
     protected PreparedStatement getCreateStatement(Treatment treatment) {
         PreparedStatement preparedStatement = null;
         try {
-            final String SQL = "INSERT INTO treatment (pid, treatment_date, begin, end, description, remark) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            final String SQL = "INSERT INTO treatment (pid, caregiver_id, treatment_date, begin, end, description, remark) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
             preparedStatement = this.connection.prepareStatement(SQL);
             preparedStatement.setLong(1, treatment.getPid());
-            preparedStatement.setString(2, treatment.getDate());
-            preparedStatement.setString(3, treatment.getBegin());
-            preparedStatement.setString(4, treatment.getEnd());
-            preparedStatement.setString(5, treatment.getDescription());
-            preparedStatement.setString(6, treatment.getRemarks());
+            preparedStatement.setLong(2, treatment.getCid());
+            preparedStatement.setString(3, treatment.getDate());
+            preparedStatement.setString(4, treatment.getBegin());
+            preparedStatement.setString(5, treatment.getEnd());
+            preparedStatement.setString(6, treatment.getDescription());
+            preparedStatement.setString(7, treatment.getRemarks());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -76,11 +77,11 @@ public class TreatmentDao extends DaoImp<Treatment> {
      */
     @Override
     protected Treatment getInstanceFromResultSet(ResultSet result) throws SQLException {
-        LocalDate date = DateConverter.convertStringToLocalDate(result.getString(3));
-        LocalTime begin = DateConverter.convertStringToLocalTime(result.getString(4));
-        LocalTime end = DateConverter.convertStringToLocalTime(result.getString(5));
-        return new Treatment(result.getLong(1), result.getLong(2),
-                date, begin, end, result.getString(6), result.getString(7));
+        LocalDate date = DateConverter.convertStringToLocalDate(result.getString(4));
+        LocalTime begin = DateConverter.convertStringToLocalTime(result.getString(5));
+        LocalTime end = DateConverter.convertStringToLocalTime(result.getString(6));
+        return new Treatment(result.getLong(1), result.getLong(2), result.getLong(3),
+                date, begin, end, result.getString(7), result.getString(8));
     }
 
     /**
@@ -112,11 +113,11 @@ public class TreatmentDao extends DaoImp<Treatment> {
     protected ArrayList<Treatment> getListFromResultSet(ResultSet result) throws SQLException {
         ArrayList<Treatment> list = new ArrayList<Treatment>();
         while (result.next()) {
-            LocalDate date = DateConverter.convertStringToLocalDate(result.getString(3));
-            LocalTime begin = DateConverter.convertStringToLocalTime(result.getString(4));
-            LocalTime end = DateConverter.convertStringToLocalTime(result.getString(5));
-            Treatment treatment = new Treatment(result.getLong(1), result.getLong(2),
-                    date, begin, end, result.getString(6), result.getString(7));
+            LocalDate date = DateConverter.convertStringToLocalDate(result.getString(4));
+            LocalTime begin = DateConverter.convertStringToLocalTime(result.getString(5));
+            LocalTime end = DateConverter.convertStringToLocalTime(result.getString(6));
+            Treatment treatment = new Treatment(result.getLong(1), result.getLong(2), result.getLong(3),
+                    date, begin, end, result.getString(7), result.getString(8));
             list.add(treatment);
         }
         return list;
@@ -167,6 +168,7 @@ public class TreatmentDao extends DaoImp<Treatment> {
             final String SQL =
                     "UPDATE treatment SET " +
                             "pid = ?, " +
+                            "caregiver_id = ?, " +
                             "treatment_date = ?, " +
                             "begin = ?, " +
                             "end = ?, " +
@@ -175,12 +177,13 @@ public class TreatmentDao extends DaoImp<Treatment> {
                             "WHERE tid = ?";
             preparedStatement = this.connection.prepareStatement(SQL);
             preparedStatement.setLong(1, treatment.getPid());
-            preparedStatement.setString(2, treatment.getDate());
-            preparedStatement.setString(3, treatment.getBegin());
-            preparedStatement.setString(4, treatment.getEnd());
-            preparedStatement.setString(5, treatment.getDescription());
-            preparedStatement.setString(6, treatment.getRemarks());
-            preparedStatement.setLong(7, treatment.getTid());
+            preparedStatement.setLong(2, treatment.getCid());
+            preparedStatement.setString(3, treatment.getDate());
+            preparedStatement.setString(4, treatment.getBegin());
+            preparedStatement.setString(5, treatment.getEnd());
+            preparedStatement.setString(6, treatment.getDescription());
+            preparedStatement.setString(7, treatment.getRemarks());
+            preparedStatement.setLong(8, treatment.getTid());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

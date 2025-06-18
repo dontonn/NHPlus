@@ -1,11 +1,16 @@
 package de.hitec.nhplus.model;
 
 import javafx.beans.property.SimpleStringProperty;
-
+/**
+ * Abstract class to use for Model to represents persons.
+ * Declares and Implements needed methods.
+ * */
 public abstract class Person {
     private final SimpleStringProperty firstName;
     private final SimpleStringProperty surname;
-
+    /**
+     * Constructor sets the name of the person.
+     * */
     public Person(String firstName, String surname) {
         this.firstName = new SimpleStringProperty(firstName);
         this.surname = new SimpleStringProperty(surname);
