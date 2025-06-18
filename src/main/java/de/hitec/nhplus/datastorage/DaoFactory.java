@@ -1,17 +1,17 @@
 package de.hitec.nhplus.datastorage;
 
 /**
- * Creates the DAO Objekts to use.
+ * Creates the DAO Objects to use.
  * */
-
 public class DaoFactory {
 
     private static DaoFactory instance;
 
     private DaoFactory() {
     }
+
     /**
-     * Implements the Singelton Pattern to get the DaoFactory Objekt.
+     * Implements the Singleton Pattern to get the DaoFactory Object.
      * @return Returns the DaoFactory instance
      * */
     public static DaoFactory getDaoFactory() {
@@ -28,6 +28,7 @@ public class DaoFactory {
     public TreatmentDao createTreatmentDao() {
         return new TreatmentDao(ConnectionBuilder.getConnection());
     }
+
     /**
      * Creates a new PatientDao and returns it.
      * @return Returns the PatientDao instance
@@ -35,6 +36,7 @@ public class DaoFactory {
     public PatientDao createPatientDAO() {
         return new PatientDao(ConnectionBuilder.getConnection());
     }
+
     /**
      * Creates a new CareGiverDao and returns it.
      * @return Returns the CareGiver instance
@@ -43,4 +45,11 @@ public class DaoFactory {
         return new CareGiverDao(ConnectionBuilder.getConnection());
     }
 
+    /**
+     * Creates a new UserDao and returns it.
+     * @return Returns the UserDao instance
+     * */
+    public UserDao createUserDAO() {
+        return new UserDao(ConnectionBuilder.getConnection());
+    }
 }

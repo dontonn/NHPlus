@@ -12,6 +12,9 @@ import de.hitec.nhplus.model.CareGiver;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import static de.hitec.nhplus.utils.DateConverter.convertStringToLocalDate;
 import static de.hitec.nhplus.utils.DateConverter.convertStringToLocalTime;
@@ -34,9 +37,11 @@ public class SetUpDB {
         SetUpDB.setUpTablePatient(connection);
         SetUpDB.setUpTableCareGiver(connection);
         SetUpDB.setUpTableTreatment(connection);
+        SetUpDB.setUpTableUsers(connection); // NEU: Users Tabelle
         SetUpDB.setUpPatients();
         SetUpDB.setUpCareGivers();
         SetUpDB.setUpTreatments();
+        SetUpDB.setUpUsers(); // NEU: Standard Users erstellen
     }
 
     /**
@@ -45,15 +50,17 @@ public class SetUpDB {
      */
     public static void wipeDb(Connection connection) {
         try (Statement statement = connection.createStatement()) {
-            statement.execute("DROP TABLE patient");
-            statement.execute("DROP TABLE treatment");
-            statement.execute("DROP TABLE care_giver");
+            statement.execute("DROP TABLE IF EXISTS patient");
+            statement.execute("DROP TABLE IF EXISTS treatment");
+            statement.execute("DROP TABLE IF EXISTS care_giver");
+            statement.execute("DROP TABLE IF EXISTS users"); // NEU: Users Tabelle auch löschen
         } catch (SQLException exception) {
             System.out.println(exception.getMessage());
         }
     }
+
     /**
-     * Sets up the patien table
+     * Sets up the patient table
      * @param connection The DB connection to use.
      * */
     private static void setUpTablePatient(Connection connection) {
@@ -71,6 +78,7 @@ public class SetUpDB {
             System.out.println(exception.getMessage());
         }
     }
+
     /**
      * Sets up the CareGiver table.
      * @param connection The DB connection to use.
@@ -113,9 +121,32 @@ public class SetUpDB {
         }
     }
 
+    /**
+     * NEU: Sets up the Users Table for Login System
+     * @param connection The DB connection to use.
+     */
+    private static void setUpTableUsers(Connection connection) {
+        final String SQL = "CREATE TABLE IF NOT EXISTS users (" +
+                "   uid INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "   username TEXT UNIQUE NOT NULL, " +
+                "   password_hash TEXT NOT NULL, " +
+                "   first_name TEXT NOT NULL, " +
+                "   last_name TEXT NOT NULL, " +
+                "   is_admin INTEGER DEFAULT 0, " +
+                "   is_active INTEGER DEFAULT 1, " +
+                "   created_at TEXT DEFAULT CURRENT_TIMESTAMP, " +
+                "   last_login TEXT " +
+                ");";
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(SQL);
+            System.out.println("Users Tabelle erfolgreich erstellt!");
+        } catch (SQLException exception) {
+            System.out.println("Fehler beim Erstellen der Users Tabelle: " + exception.getMessage());
+        }
+    }
 
     /**
-     * Creats dummy data for the patiens table
+     * Creates dummy data for the patients table
      * */
     private static void setUpPatients() {
         try {
@@ -130,8 +161,9 @@ public class SetUpDB {
             exception.printStackTrace();
         }
     }
+
     /**
-     * Creats dummy data for the CareGivers table
+     * Creates dummy data for the CareGivers table
      * */
     private static void setUpCareGivers() {
         try {
@@ -144,13 +176,13 @@ public class SetUpDB {
             exception.printStackTrace();
         }
     }
+
     /**
-     * Creats dummy data for the treatments table
+     * Creates dummy data for the treatments table
      * */
     private static void setUpTreatments() {
         try {
             TreatmentDao dao = DaoFactory.getDaoFactory().createTreatmentDao();
-            // Fixed: Using constructor without TID since the database uses AUTOINCREMENT
             dao.create(new Treatment(1, 1, convertStringToLocalDate("2023-06-03"), convertStringToLocalTime("11:00"), convertStringToLocalTime("15:00"), "Gespräch", "Der Patient hat enorme Angstgefühle und glaubt, er sei überfallen worden. Ihm seien alle Wertsachen gestohlen worden.\nPatient beruhigt sich erst, als alle Wertsachen im Zimmer gefunden worden sind."));
             dao.create(new Treatment(1, 1, convertStringToLocalDate("2023-06-05"), convertStringToLocalTime("11:00"), convertStringToLocalTime("12:30"), "Gespräch", "Patient irrt auf der Suche nach gestohlenen Wertsachen durch die Etage und bezichtigt andere Bewohner des Diebstahls.\nPatient wird in seinen Raum zurückbegleitet und erhält Beruhigungsmittel."));
             dao.create(new Treatment(2, 1, convertStringToLocalDate("2023-06-04"), convertStringToLocalTime("07:30"), convertStringToLocalTime("08:00"), "Waschen", "Patient mit Waschlappen gewaschen und frisch angezogen. Patient gewendet."));
@@ -165,8 +197,78 @@ public class SetUpDB {
             exception.printStackTrace();
         }
     }
+
     /**
-     * main methode to start db setup
+     * NEU: Creates initial users for the login system
+     */
+    private static void setUpUsers() {
+        Connection connection = ConnectionBuilder.getConnection();
+        try {
+            // Standard Admin-Benutzer erstellen
+            String adminUsername = "admin";
+            String adminPassword = "Admin123+";
+            String adminPasswordHash = hashPassword(adminPassword);
+
+            String insertAdminSQL = "INSERT OR IGNORE INTO users (username, password_hash, first_name, last_name, is_admin, is_active) VALUES (?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement stmt = connection.prepareStatement(insertAdminSQL)) {
+                stmt.setString(1, adminUsername);
+                stmt.setString(2, adminPasswordHash);
+                stmt.setString(3, "System");
+                stmt.setString(4, "Administrator");
+                stmt.setInt(5, 1); // is_admin = true
+                stmt.setInt(6, 1); // is_active = true
+                stmt.executeUpdate();
+                System.out.println("✅ Standard Admin-Benutzer erstellt: " + adminUsername + " / " + adminPassword);
+            }
+
+            // Standard Pfleger-Benutzer erstellen
+            String userUsername = "pfleger1";
+            String userPassword = "Pfleger123+";
+            String userPasswordHash = hashPassword(userPassword);
+
+            String insertUserSQL = "INSERT OR IGNORE INTO users (username, password_hash, first_name, last_name, is_admin, is_active) VALUES (?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement stmt = connection.prepareStatement(insertUserSQL)) {
+                stmt.setString(1, userUsername);
+                stmt.setString(2, userPasswordHash);
+                stmt.setString(3, "Max");
+                stmt.setString(4, "Mustermann");
+                stmt.setInt(5, 0); // is_admin = false
+                stmt.setInt(6, 1); // is_active = true
+                stmt.executeUpdate();
+                System.out.println("✅ Standard Pfleger-Benutzer erstellt: " + userUsername + " / " + userPassword);
+            }
+
+        } catch (SQLException exception) {
+            System.out.println("❌ Fehler beim Erstellen der Standard-Benutzer: " + exception.getMessage());
+            exception.printStackTrace();
+        }
+    }
+
+    /**
+     * Erstellt einen SHA-256 Hash für Passwörter
+     * @param password Das zu hashende Passwort
+     * @return Der SHA-256 Hash als String
+     */
+    private static String hashPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(password.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashBytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA-256 Algorithmus nicht verfügbar", e);
+        }
+    }
+
+    /**
+     * main method to start db setup
      * */
     public static void main(String[] args) {
         SetUpDB.setUpDb();

@@ -2,30 +2,85 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="688.0" prefWidth="926.0" stylesheets="@Application.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hitec.nhplus.controller.MainWindowController">
-   <left>
-      <VBox id="vBox" alignment="CENTER" spacing="50.0" styleClass="vBox" stylesheets="@Application.css" BorderPane.alignment="CENTER">
+<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="688.0" prefWidth="926.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hitec.nhplus.controller.MainWindowController">
+
+   <!-- Top: Welcome Bar -->
+   <top>
+      <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #1a1a1a; -fx-padding: 15;">
          <children>
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleShowAllPatient" prefWidth="105.0" text="Patienten/innen">
+            <Label text="NHPlus - Pflegeheim Management" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;" />
+            <!-- Spacer -->
+            <Label text="" HBox.hgrow="ALWAYS" />
+            <Label fx:id="welcomeLabel" text="Willkommen!" style="-fx-font-size: 14px; -fx-text-fill: #b0b0b0;" />
+         </children>
+      </HBox>
+   </top>
+
+   <!-- Left: Navigation Menu -->
+   <left>
+      <VBox alignment="TOP_CENTER" spacing="20.0" style="-fx-background-color: #2d2d30; -fx-padding: 25;" BorderPane.alignment="CENTER">
+         <children>
+            <!-- Main Navigation Buttons -->
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleShowAllPatient" prefWidth="180.0" prefHeight="45.0" text="Patienten/innen"
+                    style="-fx-background-color: #404040; -fx-text-fill: #e0e0e0; -fx-font-size: 14px; -fx-font-weight: 500; -fx-background-radius: 8; -fx-border-color: #555; -fx-border-width: 1; -fx-border-radius: 8;">
                <VBox.margin>
-                  <Insets bottom="50.0" left="10.0" right="10.0" top="50.0" />
+                  <Insets top="20.0" />
                </VBox.margin>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets></Button>
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleShowAllTreatments" prefWidth="105.0" text="Behandlungen">
-               <VBox.margin>
-                  <Insets bottom="50.0" left="10.0" right="10.0" top="50.0" />
-               </VBox.margin></Button>
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleShowAllCareGivers" prefWidth="105.0" text="Pfleger/innen">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
             </Button>
+
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleShowAllTreatments" prefWidth="180.0" prefHeight="45.0" text="Behandlungen"
+                    style="-fx-background-color: #404040; -fx-text-fill: #e0e0e0; -fx-font-size: 14px; -fx-font-weight: 500; -fx-background-radius: 8; -fx-border-color: #555; -fx-border-width: 1; -fx-border-radius: 8;" />
+
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleShowAllCareGivers" prefWidth="180.0" prefHeight="45.0" text="Pfleger/innen"
+                    style="-fx-background-color: #404040; -fx-text-fill: #e0e0e0; -fx-font-size: 14px; -fx-font-weight: 500; -fx-background-radius: 8; -fx-border-color: #555; -fx-border-width: 1; -fx-border-radius: 8;" />
+
+            <!-- Spacer -->
+            <Label text="" VBox.vgrow="ALWAYS" />
+
+            <!-- Admin Section -->
+            <VBox spacing="15.0" alignment="CENTER">
+               <Label text="Administration" style="-fx-text-fill: #a0a0a0; -fx-font-size: 13px; -fx-font-weight: 500;" />
+
+               <Button fx:id="adminButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleShowAdminPanel"
+                       prefWidth="180.0" prefHeight="40.0" text="Benutzerverwaltung" visible="false" managed="false"
+                       style="-fx-background-color: #d73527; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: 500; -fx-background-radius: 8;" />
+
+               <Button fx:id="logoutButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleLogout"
+                       prefWidth="180.0" prefHeight="40.0" text="Abmelden"
+                       style="-fx-background-color: #505050; -fx-text-fill: #e0e0e0; -fx-font-size: 13px; -fx-font-weight: 500; -fx-background-radius: 8;">
+                  <VBox.margin>
+                     <Insets bottom="25.0" />
+                  </VBox.margin>
+               </Button>
+            </VBox>
+
          </children>
       </VBox>
    </left>
+
+   <!-- Center: Content Area -->
+   <center>
+      <VBox alignment="CENTER" spacing="35.0" style="-fx-background-color: #f8f8f8;">
+         <children>
+            <Label text="+" style="-fx-font-size: 64px; -fx-text-fill: #4a90e2; -fx-font-weight: 300;" />
+            <Label text="NHPlus" style="-fx-font-size: 42px; -fx-font-weight: 300; -fx-text-fill: #2c2c2c;">
+               <font>
+                  <Font size="42.0" />
+               </font>
+            </Label>
+            <Label text="Pflegeheim Management System" style="-fx-font-size: 17px; -fx-text-fill: #6c6c6c; -fx-font-weight: 400;" />
+            <Label text="Wählen Sie links einen Menüpunkt aus" style="-fx-font-size: 14px; -fx-text-fill: #999999; -fx-font-weight: 400;" />
+         </children>
+         <padding>
+            <Insets bottom="60.0" left="50.0" right="50.0" top="60.0" />
+         </padding>
+      </VBox>
+   </center>
+
 </BorderPane>
